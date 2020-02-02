@@ -4,12 +4,14 @@ import javax.print.attribute.standard.Media;
 import java.util.ArrayList;
 import java.util.List;
 
+//List of MediaItem with a name
 public abstract class MediaList {
-    private ArrayList<MediaItem> mediaList;
-    private String listName;
+
+    public ArrayList<MediaItem> mediaList; //List that holds all the MediaItem
+    public String listName; //Name of the list
 
     /*
-     * REQUIRES: listName can not be empty
+     * REQUIRES: listName can not be empty String
      * MODIFIES: this
      * EFFECTS: Initializes an empty list with type of MediaItems, sets the name of the list to Listname
      * */
@@ -32,10 +34,17 @@ public abstract class MediaList {
 
     /*
     * MODIFIES: this
-    * EFFECTS: media is added to the list
+    * EFFECTS: media is added to the mediaList
     * */
     public void addMedia(MediaItem media) {
         mediaList.add(media);
     }
 
+    /*
+    * MODIFIES: this
+    * EFFECTS: remove media from mediaList
+    * */
+    public void removeMedia(MediaItem media) {
+        mediaList.remove(media);
+    }
 }

@@ -1,9 +1,10 @@
 package model;
 
+// Represents a media(Movies, tv show...) item with a name and status (whether it has been seen or not)
 public class MediaItem {
 
-    private String mediaName;
-    private Boolean watched;
+    private String mediaName; //Name of the Media
+    private Boolean watched; //State of the media; if it has been watched
 
     /*
     * REQUIRES: None empty mediaName
