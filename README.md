@@ -11,10 +11,9 @@ contents. The intent of this application is to make it easier for everyone to ma
 
 As a user, I want to...
 
-- add a movie/show to my watched list
-- add a movie/show to my to watch list
-- view the list of shows on my watched list
-- view the list of shows on my to watch list
-- delete a movie/show to my watched list
-- delete a movie/show to my to watch list
-- add a movie/show to my watched list through to watch list
+- add a movie/show to a list
+- view the list of shows on my list
+- delete a movie/show on my list
+- set a movie/show to watched or not watched
+- change the name of the list
+- change the name of the movie/shows

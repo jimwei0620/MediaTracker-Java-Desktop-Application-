@@ -11,19 +11,19 @@ public class TestMediaItem {
 
     @BeforeEach
     public void testMediaItem() {
-        item1 = new MediaItem("Avengers", false);
+        item1 = new MediaItem("Avengers");
     }
 
     @Test
     public void testConstruct() {
-        assertEquals(item1.getName(), "Avengers");
+        assertEquals("Avengers", item1.getName());
         assertFalse(item1.getWatchStatus());
     }
 
     @Test
     public void testSetName() {
         item1.setName("Endgame");
-        assertEquals(item1.getName(), "Endgame");
+        assertEquals("Endgame", item1.getName());
     }
 
     @Test

@@ -9,11 +9,11 @@ public class MediaItem {
     /*
     * REQUIRES: None empty mediaName
     * MODIFIES: this
-    * EFFECTS: Creates a MediaItem with name mediaName
+    * EFFECTS: Creates a MediaItem with name mediaName and watch status false
     * */
-    public MediaItem(String mediaName, Boolean watched) {
+    public MediaItem(String mediaName) {
         this.mediaName = mediaName;
-        this.watched = watched;
+        this.watched = false;
     }
 
     public String getName() {

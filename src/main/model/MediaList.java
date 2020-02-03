@@ -1,13 +1,11 @@
 package model;
 
-import javax.print.attribute.standard.Media;
 import java.util.ArrayList;
-import java.util.List;
 
 //List of MediaItem with a name
-public abstract class MediaList {
+public class MediaList {
 
-    public ArrayList<MediaItem> mediaList; //List that holds all the MediaItem
+    public ArrayList<MediaItem> mediaItemList; //List that holds all the MediaItem
     public String listName; //Name of the list
 
     /*
@@ -17,7 +15,7 @@ public abstract class MediaList {
      * */
     public MediaList(String listName) {
         this.listName = listName;
-        this.mediaList = new ArrayList<>();
+        this.mediaItemList = new ArrayList<>();
     }
 
     public String getName() {
@@ -29,7 +27,7 @@ public abstract class MediaList {
     }
 
     public ArrayList<MediaItem> getList() {
-        return this.mediaList;
+        return this.mediaItemList;
     }
 
     /*
@@ -37,7 +35,7 @@ public abstract class MediaList {
     * EFFECTS: media is added to the mediaList
     * */
     public void addMedia(MediaItem media) {
-        mediaList.add(media);
+        mediaItemList.add(media);
     }
 
     /*
@@ -45,6 +43,20 @@ public abstract class MediaList {
     * EFFECTS: remove media from mediaList
     * */
     public void removeMedia(MediaItem media) {
-        mediaList.remove(media);
+        mediaItemList.remove(media);
+    }
+
+    /*
+    * REQUIRES: none empty name
+    * EFFECTS: Search media with mediaName in the mediaList returns null if media with mediaName is not found,
+    * else return the MediaItem with the name
+    * */
+    public MediaItem getMediaItemByName(String mediaName) {
+        for (MediaItem item: mediaItemList) {
+            if (item.getName().equals(mediaName)) {
+                return item;
+            }
+        }
+        return null;
     }
 }
