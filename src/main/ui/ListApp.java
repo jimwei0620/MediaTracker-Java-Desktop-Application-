@@ -5,6 +5,8 @@ import com.sun.org.apache.xpath.internal.operations.Bool;
 import model.MediaItem;
 import model.MediaList;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class ListApp {
@@ -69,12 +71,16 @@ public class ListApp {
     * EFFECTS: display the mediaList to the user
     * */
     private void displayList() {
-        String listToDisplay = "";
-        for (MediaItem item : mediaList.getList()) {
-            listToDisplay += item.getName() + " ";
+        String listToDisplay = mediaList.getName() + " : ";
+        Iterator<MediaItem> list = mediaList.getList().iterator(); //Adapted from Java iterator documentation
+        while (list.hasNext()) {
+            listToDisplay += list.next().getName();
+            if (list.hasNext()) {
+                listToDisplay += ", ";
+            }
         }
         if (listToDisplay.equals("")) {
-            System.out.println("List is currently empty.\n");
+            System.out.println(mediaList.getName() + " is currently empty.\n");
         } else {
             System.out.println(listToDisplay);
 

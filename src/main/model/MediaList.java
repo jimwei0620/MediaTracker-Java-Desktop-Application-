@@ -5,8 +5,8 @@ import java.util.ArrayList;
 //List of MediaItem with a name
 public class MediaList {
 
-    public ArrayList<MediaItem> mediaItemList; //List that holds all the MediaItem
-    public String listName; //Name of the list
+    protected ArrayList<MediaItem> mediaItemList; //List that holds all the MediaItem
+    protected String listName; //Name of the list
 
     /*
      * REQUIRES: listName can not be empty String
