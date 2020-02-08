@@ -1,7 +1,8 @@
 package ui;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import model.ListManager;
-import model.MediaItem;
 import model.MediaList;
 
 import java.util.Iterator;
@@ -30,7 +31,7 @@ public class TrackerApp {
 
         while (appIsRunning) {
             displayMainMenuOptions();
-            menuCommand = input.next();
+            menuCommand = input.nextLine();
             menuCommand = menuCommand.toLowerCase();
 
             if (menuCommand.equals("q")) {
@@ -58,13 +59,13 @@ public class TrackerApp {
     private void processMenuCommand(String command) {
         switch (command) {
             case "1": //switch right now for further development purposes
-                addOrDeleteList("add");
+                processArgument("add");
                 return;
             case "2" :
-                addOrDeleteList("del");
+                processArgument("delete");
                 return;
             case "3":
-                selectList();
+                processArgument("select");
                 return;
             default:
                 System.out.println("Sorry...that command is invalid. Please try again!\n");
@@ -72,89 +73,85 @@ public class TrackerApp {
     }
 
     /*
-    * REQUIRES: Operation name to be "del" or "add"
-    * MODIFIES: This
-    * EFFECTS: add or deletes a list
+    * EFFECTS: displays and prompts arguments required to complete commands. Restarts if processOperation fails.
     * */
-    private void addOrDeleteList(String op) {
-        String listToEdit;
-        Boolean editingList = true;
+    private void processArgument(String textCommand) {
+        String argument;
+        Boolean processingArgument = true;
 
-        System.out.println("Type the name of the media to " + op + ".\n");
-        System.out.println("Type CANCEL to cancel this operation.\n");
-
-        while (editingList) {
-            listToEdit = input.next();
-            if (listToEdit.equals("")) {
-                System.out.println("Sorry! the name of the list cannot be empty! Please try again.\n");
-                System.out.println("Type CANCEL to cancel the operation.\n");
-            } else if (listToEdit.equals("CANCEL")) {
+        while (processingArgument) {
+            System.out.println("Type the name of the list to " + textCommand + ".");
+            System.out.println("Type \"CANCEL\" to cancel this operation.\n");
+            argument = input.nextLine();
+            if (argument.equals("CANCEL")) {
                 System.out.println("Operation was cancelled.\n");
-                editingList = false;
+                processingArgument = false;
             } else {
-                editingList = !processOperation(op, listToEdit);
+                processingArgument = !processOperation(textCommand, argument);
             }
         }
     }
 
+
     /*
-     * REQUIRES: Operation name to be "del" or "add"
-     * EFFECTS: process operation specified. returns true if operation is successful else false
+     * EFFECTS: process operation specified with argument. returns true if operation is successful else return false
      *  */
-    private Boolean processOperation(String op, String listToEdit) {
-        if (op == "add") {
-            MediaList newMediaList = new MediaList(listToEdit);
-            listColl.addToColl(newMediaList);
-            System.out.println(listToEdit + " was successfully added.\n");
-            return true;
-        } else {
-            MediaList mediaListToDelete = listColl.findMediaListByName(listToEdit);
-            if (mediaListToDelete == null) {
-                System.out.println("Sorry, list with name " + listToEdit + " was not found. Please try again.");
+    private Boolean processOperation(String op, String argument) {
+        switch (op) {
+            case "add":
+                return addNewList(argument);
+            case "delete":
+                return deleteList(argument);
+            case "select":
+                return startListApp(argument);
+            default:
+                System.out.println("Internal Error!");
                 return false;
-            } else {
-                listColl.remove(mediaListToDelete);
-                System.out.println(listToEdit + " was successfully deleted.\n");
-                return true;
-            }
         }
     }
 
+
     /*
-    * EFFECTS: process user input to select and view a list
+    * REQUIRES: None empty string argument
+    * MODIFIES: This
+    * EFFECTS: add a new list to listColl, returns true
     * */
-    private void selectList() {
-        String listName;
-        Boolean selectingList = true;
+    private Boolean addNewList(String argument) {
+        MediaList newMediaList = new MediaList(argument);
+        listColl.addToColl(newMediaList);
+        System.out.println("\"" + argument + "\" was successfully added.\n");
+        return true;
+    }
 
-        System.out.println("Type the name of the List to view.\n");
-        System.out.println("Type CANCEL to cancel this operation.\n");
-
-        while (selectingList) {
-
-            listName = input.next();
-            if (listName.equals("")) {
-                System.out.println("Sorry! the name of the media cannot be empty! Please try again.\n");
-            } else if (listName.equals("CANCEL")) {
-                System.out.println("Cancelled viewing List\n");
-                selectingList = false;
-            } else {
-                selectingList = startListApp(listName);
-            }
+    /*
+    * REQUIRES: None empty string argument
+    * MODIFIES: This
+    * EFFECTS: Delete first list found with name argument, return true if deleted, return false if list with
+    *          such name was not found
+    * */
+    private Boolean deleteList(String argument) {
+        MediaList mediaListToDelete = listColl.findMediaListByName(argument);
+        if (mediaListToDelete == null) {
+            System.out.println("Sorry, list with name \"" + argument + "\" was not found. Please try again.");
+            return false;
+        } else {
+            listColl.remove(mediaListToDelete);
+            System.out.println("\"" + argument + "\" was successfully deleted.\n");
+            return true;
         }
     }
 
     /*
-    * EFFECTS: start ListApp if list with listName is in listColl
+    * EFFECTS: start ListApp if list with listName is in listColl and return true, else return false;
     * */
     private Boolean startListApp(String listName) {
         MediaList listToView = listColl.findMediaListByName(listName);
         if (listToView == null) {
-            System.out.println("Sorry! the list with name " + listName + " was not found! Please try again.");
-            return true;
-        } else {
-            new ListApp(listToView);
+            System.out.println("Sorry! the list with name \"" + listName + "\" was not found! Please try again.");
             return false;
+        } else {
+            new ListUI(listToView);
+            return true;
         }
     }
 
@@ -163,7 +160,7 @@ public class TrackerApp {
     * */
     private void displayListColl() {
         String listCollString = "Your lists: ";
-        System.out.println("There are currently " + listColl.size() + " lists.");
+        System.out.println("There are currently \"" + listColl.size() + "\" lists.");
         Iterator<MediaList> list = listColl.getList().iterator(); //Adapted from Java iterator documentation
         while (list.hasNext()) {
             listCollString += list.next().getName();
@@ -174,12 +171,11 @@ public class TrackerApp {
         System.out.println(listCollString);
     }
 
-
     /*
      * EFFECTS: display Main menu options to user
      * */
     private void displayMainMenuOptions() {
-        System.out.println("Choose a list:\n");
+        System.out.println("Choose an option:");
         System.out.println("\t1 -> Create a new list");
         System.out.println("\t2 -> Delete a list");
         System.out.println("\t3 -> View a list");
