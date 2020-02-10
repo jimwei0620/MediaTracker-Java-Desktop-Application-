@@ -13,6 +13,8 @@ import java.util.ArrayList;
 // A reader that can read list data from file. Modeled after Teller App
 public class Reader {
 
+    private Reader() {}
+
     // EFFECTS: returns a list of General data read from file;
     // throws IOException if an exception is raised when opening / reading from file
     // Modeled from https://futurestud.io/tutorials/gson-mapping-of-arrays-and-lists-of-objects
@@ -32,9 +34,8 @@ public class Reader {
         } catch (FileNotFoundException e) {
             System.out.println("There are no data files!");
             File file = new File(filePath);
-            if (file.createNewFile()) {
-                System.out.println("Created new file");
-            }
+            file.createNewFile();
+            System.out.println("Created new file");
         }
         return infoRead;
     }
