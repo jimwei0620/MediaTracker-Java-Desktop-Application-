@@ -1,5 +1,6 @@
 package model;
 
+import exceptions.EmptyStringException;
 import org.json.JSONObject;
 
 
@@ -10,11 +11,14 @@ public class MediaItem {
     private String status; //State of the media; if it has been watched
 
     /*
-    * REQUIRES: None empty mediaName
     * MODIFIES: this
-    * EFFECTS: Creates a MediaItem with name mediaName and watch status false
+    * EFFECTS: Creates a MediaItem with name mediaName and watch status false. Throws EmptyStringException
+    * if mediaName is empty.
     * */
-    public MediaItem(String mediaName) {
+    public MediaItem(String mediaName) throws EmptyStringException {
+        if (mediaName.isEmpty()) {
+            throw new EmptyStringException();
+        }
         this.mediaName = mediaName;
         status = "NOT WATCHED";
     }
@@ -35,6 +39,8 @@ public class MediaItem {
         return  this.status;
     }
 
+
+    // EFFECTS: save the details of the MediaItem and return it as a JSONObject
     public JSONObject save() {
         JSONObject mediaItem = new JSONObject();
         mediaItem.put("mediaName", mediaName);

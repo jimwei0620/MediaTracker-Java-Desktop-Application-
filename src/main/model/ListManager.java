@@ -1,6 +1,7 @@
 package model;
 
 
+import exceptions.EmptyStringException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.SaveAble;
@@ -46,10 +47,13 @@ public class ListManager implements SaveAble {
     }
 
     /*
-    * REQUIRES: non empty String name
     * EFFECTS: Find and return MediaList in mediaListColl has the matching name, else return null
+    * throws EmptyStringException if String is empty
     * */
-    public MediaList findMediaListByName(String name) {
+    public MediaList findMediaListByName(String name) throws EmptyStringException {
+        if (name.isEmpty()) {
+            throw new EmptyStringException();
+        }
         for (MediaList list: mediaListColl) {
             if (list.getName().equals(name)) {
                 return list;

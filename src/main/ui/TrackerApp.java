@@ -1,6 +1,7 @@
 package ui;
 
 
+import exceptions.EmptyStringException;
 import model.ListManager;
 import model.MediaList;
 
@@ -146,46 +147,60 @@ public class TrackerApp {
 
 
     /*
-    * REQUIRES: None empty string argument
     * MODIFIES: This
-    * EFFECTS: add a new list to listColl, returns true
+    * EFFECTS: add a new list to listColl, returns true if successful. Catches EmptyStringException
     * */
     private Boolean addNewList(String argument) {
-        MediaList newMediaList = new MediaList(argument);
-        listColl.addToColl(newMediaList);
-        System.out.println("\"" + argument + "\" was successfully added.\n");
-        return true;
+        try {
+            MediaList newMediaList = new MediaList(argument);
+            listColl.addToColl(newMediaList);
+            System.out.println("\"" + argument + "\" was successfully added.\n");
+            return true;
+        } catch (EmptyStringException e) {
+            System.out.println("Name of the new list cannot be empty! Try again!");
+            return false;
+        }
     }
 
     /*
-    * REQUIRES: None empty string argument
     * MODIFIES: This
     * EFFECTS: Delete first list found with name argument, return true if deleted, return false if list with
-    *          such name was not found
+    *          such name was not found. Catches EmptyStringException
     * */
     private Boolean deleteList(String argument) {
-        MediaList mediaListToDelete = listColl.findMediaListByName(argument);
-        if (mediaListToDelete == null) {
-            System.out.println("Sorry, list with name \"" + argument + "\" was not found. Please try again.");
+        try {
+            MediaList mediaListToDelete = listColl.findMediaListByName(argument);
+            if (mediaListToDelete == null) {
+                System.out.println("Sorry, list with name \"" + argument + "\" was not found. Please try again.");
+                return false;
+            } else {
+                listColl.remove(mediaListToDelete);
+                System.out.println("\"" + argument + "\" was successfully deleted.\n");
+                return true;
+            }
+        } catch (EmptyStringException e) {
+            System.out.println("Name of the list to delete cannot be empty! Try again!");
             return false;
-        } else {
-            listColl.remove(mediaListToDelete);
-            System.out.println("\"" + argument + "\" was successfully deleted.\n");
-            return true;
         }
     }
 
     /*
     * EFFECTS: start ListApp if list with listName is in listColl and return true, else return false;
+    * Catches EmptyStringException
     * */
     private Boolean startListApp(String listName) {
-        MediaList listToView = listColl.findMediaListByName(listName);
-        if (listToView == null) {
-            System.out.println("Sorry! the list with name \"" + listName + "\" was not found! Please try again.");
+        try {
+            MediaList listToView = listColl.findMediaListByName(listName);
+            if (listToView == null) {
+                System.out.println("Sorry! the list with name \"" + listName + "\" was not found! Please try again.");
+                return false;
+            } else {
+                new ListUI(listToView);
+                return true;
+            }
+        } catch (EmptyStringException e) {
+            System.out.println("Name of the list cannot be empty! Try again!");
             return false;
-        } else {
-            new ListUI(listToView);
-            return true;
         }
     }
 

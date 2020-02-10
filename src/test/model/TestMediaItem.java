@@ -1,5 +1,6 @@
 package model;
 
+import exceptions.EmptyStringException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,9 +12,12 @@ public class TestMediaItem {
 
     @BeforeEach
     public void testMediaItem() {
-        item1 = new MediaItem("Avengers");
+        try {
+            item1 = new MediaItem("Avengers");
+        } catch (EmptyStringException e){
+            fail("Should not have ran into EmptyStringException");
+        }
     }
-
     @Test
     public void testConstruct() {
         assertEquals("Avengers", item1.getName());

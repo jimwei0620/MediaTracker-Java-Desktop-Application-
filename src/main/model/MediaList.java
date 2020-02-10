@@ -1,5 +1,6 @@
 package model;
 
+import exceptions.EmptyStringException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -12,11 +13,14 @@ public class MediaList {
     protected String listName; //Name of the list
 
     /*
-     * REQUIRES: listName can not be empty String
      * MODIFIES: this
-     * EFFECTS: Initializes an empty list with type of MediaItems, sets the name of the list to Listname
+     * EFFECTS: Initializes an empty list with type of MediaItems, sets the name of the list to listName. throws
+     * EmptyStringException if listName is empty.
      * */
-    public MediaList(String listName) {
+    public MediaList(String listName) throws EmptyStringException {
+        if (listName.isEmpty()) {
+            throw new EmptyStringException();
+        }
         this.listName = listName;
         this.mediaItemList = new ArrayList<>();
     }
@@ -25,7 +29,13 @@ public class MediaList {
         return this.listName;
     }
 
-    public void setName(String newName) {
+    // MODIFIES: this
+    // EFFECTS: set the name of the list to newName. Throws EmptyString Exception if
+    // newName is empty
+    public void setName(String newName) throws EmptyStringException {
+        if (newName.isEmpty()) {
+            throw new EmptyStringException();
+        }
         this.listName = newName;
     }
 
@@ -50,11 +60,13 @@ public class MediaList {
     }
 
     /*
-    * REQUIRES: none empty name
     * EFFECTS: Search media with mediaName in the mediaList returns null if media with mediaName is not found,
-    * else return the MediaItem with the name
+    * else return the MediaItem with the name. Throws EmptyStringException if mediaName is empty
     * */
-    public MediaItem getMediaItemByName(String mediaName) {
+    public MediaItem getMediaItemByName(String mediaName) throws EmptyStringException {
+        if (mediaName.isEmpty()) {
+            throw new EmptyStringException();
+        }
         for (MediaItem item: mediaItemList) {
             if (item.getName().equals(mediaName)) {
                 return item;
@@ -63,6 +75,7 @@ public class MediaList {
         return null;
     }
 
+    // EFFECTS: save details of the MediaList and return it as a JsonObject
     public JSONObject save() {
         JSONObject mediaList = new JSONObject();
         mediaList.put("listName", this.listName);

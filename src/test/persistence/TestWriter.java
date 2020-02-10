@@ -1,5 +1,6 @@
 package persistence;
 
+import exceptions.EmptyStringException;
 import model.ListManager;
 import model.MediaItem;
 import model.MediaList;
@@ -35,14 +36,14 @@ public class TestWriter {
     }
 
     @Test
-    void testWriteLists() throws IOException {
-        MediaList testList = new MediaList("To watch List");
-        MediaItem testItem = new MediaItem("Avengers");
-        testList.addMedia(testItem);
-        manager.addToColl(testList);
-        testWriter.write(manager);
-        testWriter.close();
+    void testWriteLists() {
         try {
+            MediaList testList = new MediaList("To watch List");
+            MediaItem testItem = new MediaItem("Avengers");
+            testList.addMedia(testItem);
+            manager.addToColl(testList);
+            testWriter.write(manager);
+            testWriter.close();
             ArrayList<MediaList> lists = Reader.readFile(TEST_FILE);
             assertEquals(1, lists.size());
             MediaList listReturned = lists.get(0);
@@ -55,6 +56,8 @@ public class TestWriter {
             fail("NullPointerException should not have been thrown");
         } catch (IOException e) {
             fail("IOException should not have been thrown");
+        } catch (EmptyStringException e) {
+            fail("EmptyStringException should not have been thrown");
         }
     }
 }

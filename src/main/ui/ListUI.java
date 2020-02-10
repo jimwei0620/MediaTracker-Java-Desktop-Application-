@@ -1,7 +1,9 @@
 package ui;
 
+import exceptions.EmptyStringException;
 import model.MediaItem;
 import model.MediaList;
+import sun.invoke.empty.Empty;
 
 
 import java.util.Iterator;
@@ -122,49 +124,62 @@ public class ListUI {
     }
 
     /*
-    * REQUIRES: non empty String argument
     * MODIFIES: this
-    * EFFECTS: adds a new MediaItem(user created) to list with name argument, returns true;
+    * EFFECTS: adds a new MediaItem(user created) to list with name argument, returns true if successful. Catches
+    * EmptyStringException.
     * */
     private Boolean addNewMediaToList(String argument) {
         MediaItem newMedia;
-        newMedia = new MediaItem(argument);
-        mediaList.addMedia(newMedia);
-        System.out.println("\"" + argument + "\" was successfully added to \""
-                        + mediaList.getName() + "\".");
-        System.out.println("\"" + argument + "\" is currently " + newMedia.getWatchStatus() + ".\n");
+        try {
+            newMedia = new MediaItem(argument);
+            mediaList.addMedia(newMedia);
+            System.out.println("\"" + argument + "\" was successfully added to \""
+                    + mediaList.getName() + "\".");
+            System.out.println("\"" + argument + "\" is currently " + newMedia.getWatchStatus() + ".\n");
+        } catch (EmptyStringException e) {
+            System.out.println("Name of the new Media cannot be empty! Try again!");
+            return false;
+        }
         return true;
     }
 
     /*
-    * REQUIRES: Non empty String argument
     * MODIFIES: this
     * EFFECTS: delete a MediaItem with name argument from the list. Return true if successful, else return false
+    * Catches EmptyStringException.
     * */
     private Boolean deleteMediaFromList(String argument) {
         MediaItem mediaFound;
-        mediaFound = mediaList.getMediaItemByName(argument);
-
-        if (mediaFound == null) {
-            System.out.println("Sorry, media was not found. Please try again!");
-            return false;
-        } else {
-            mediaList.removeMedia(mediaFound);
-            System.out.println("\"" + argument + "\""  + " has been successfully deleted from \""
+        try {
+            mediaFound = mediaList.getMediaItemByName(argument);
+            if (mediaFound == null) {
+                System.out.println("Sorry, media was not found. Please try again!");
+                return false;
+            } else {
+                mediaList.removeMedia(mediaFound);
+                System.out.println("\"" + argument + "\""  + " has been successfully deleted from \""
                         + mediaList.getName() + "\n");
-            return true;
+                return true;
+            }
+        } catch (EmptyStringException e) {
+            System.out.println("Name of the media cannot be empty! Try again!");
+            return false;
         }
     }
 
     /*
-    * REQUIRES: Non empty String argument
     * MODIFIES: this
-    * EFFECTS: change the name of the mediaList to argument, returns true
+    * EFFECTS: change the name of the mediaList to argument, returns true if successful. Catches EmptyStringException.
     * */
     private Boolean changeMediaListName(String argument) {
-        mediaList.setName(argument);
-        System.out.println("\"" + argument + "\"" + " has successfully been set to the new name of the list!\n");
-        return true;
+        try {
+            mediaList.setName(argument);
+            System.out.println("\"" + argument + "\"" + " has successfully been set to the new name of the list!\n");
+            return true;
+        } catch (EmptyStringException e) {
+            System.out.println("New name of the list cannot be empty! Try again!");
+            return false;
+        }
     }
 
     /*
@@ -173,14 +188,19 @@ public class ListUI {
     *          MediaItem was found, else return false
     * */
     private Boolean viewMediaItem(String argument) {
-        MediaItem mediaFound;
-        mediaFound = mediaList.getMediaItemByName(argument);
-        if (mediaFound == null) {
-            System.out.println("Sorry media with name \"" + argument + "\" was not found. Please try again.");
+        try {
+            MediaItem mediaFound;
+            mediaFound = mediaList.getMediaItemByName(argument);
+            if (mediaFound == null) {
+                System.out.println("Sorry media with name \"" + argument + "\" was not found. Please try again.");
+                return false;
+            } else {
+                new MediaItemUI(mediaFound);
+                return true;
+            }
+        } catch (EmptyStringException e) {
+            System.out.println("Name of the media cannot be empty! Try again!");
             return false;
-        } else {
-            new MediaItemUI(mediaFound);
-            return true;
         }
     }
 
