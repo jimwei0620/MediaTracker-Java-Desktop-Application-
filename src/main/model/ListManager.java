@@ -1,10 +1,16 @@
 package model;
 
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.SaveAble;
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 //Represent a manager that control and stores all the lists
-public class ListManager {
+public class ListManager implements SaveAble {
 
     private ArrayList<MediaList> mediaListColl;
 
@@ -57,5 +63,15 @@ public class ListManager {
     * */
     public ArrayList<MediaList> getList() {
         return mediaListColl;
+    }
+
+    @Override
+    public void save(FileWriter file) {
+        JSONArray arrayOfLists = new JSONArray();
+        for (MediaList item: mediaListColl) {
+            JSONObject mediaListObject = item.save();
+            arrayOfLists.put(mediaListObject);
+        }
+        arrayOfLists.write(file);
     }
 }

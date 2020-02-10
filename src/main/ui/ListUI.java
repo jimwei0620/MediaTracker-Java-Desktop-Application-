@@ -27,6 +27,7 @@ public class ListUI {
         initListApp(list);
         System.out.println("This is the \"" +  mediaList.getName() + "\" list!\n");
         while (listIsRunning) {
+            displayList();
             displayListMenuOptions();
             listCommand = input.nextLine();
 
@@ -45,18 +46,15 @@ public class ListUI {
     private void processListCommand(String listCommand) {
         switch (listCommand) {
             case "1":
-                displayList();
-                return;
-            case "2":
                 processArgument("add");
                 return;
-            case "3":
+            case "2":
                 processArgument("delete");
                 return;
-            case "4":
+            case "3":
                 processArgument("changeName");
                 return;
-            case "5":
+            case "4":
                 processArgument("select");
                 return;
             default:
@@ -111,7 +109,7 @@ public class ListUI {
         String listToDisplay = mediaList.getName() + " : ";
         Iterator<MediaItem> list = mediaList.getList().iterator(); //Adapted from Java iterator documentation
         while (list.hasNext()) {
-            listToDisplay += list.next().getName();
+            listToDisplay += "\"" + list.next().getName() + "\"";
             if (list.hasNext()) {
                 listToDisplay += ", ";
             }
@@ -200,11 +198,10 @@ public class ListUI {
      * */
     private void displayListMenuOptions() {
         System.out.println("Choose an action:");
-        System.out.println("\t1 -> view list");
-        System.out.println("\t2 -> add a media to list");
-        System.out.println("\t3 -> delete a media from list");
-        System.out.println("\t4 -> Change the name of the list");
-        System.out.println("\t5 -> View a media Item");
+        System.out.println("\t1 -> add a media to list");
+        System.out.println("\t2 -> delete a media from list");
+        System.out.println("\t3 -> Change the name of the list");
+        System.out.println("\t4 -> View a media Item");
         System.out.println("\tq -> exit list\n");
     }
 }

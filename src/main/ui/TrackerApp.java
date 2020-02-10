@@ -5,11 +5,15 @@ import com.sun.org.apache.xpath.internal.operations.Bool;
 import model.ListManager;
 import model.MediaList;
 
+import java.io.*;
 import java.util.Iterator;
 import java.util.Scanner;
 
+import persistence.Writer;
+
 //Media Tracker application Modeled after TellerApp example given for now
 public class TrackerApp {
+    private static final String LIST_FILE = "./data/lists.json";
     private ListManager listColl;
     private Scanner input; //Input for console.
 
@@ -27,14 +31,16 @@ public class TrackerApp {
         String menuCommand;
 
         initApp();
-        displayListColl();
+
 
         while (appIsRunning) {
+            displayListColl();
             displayMainMenuOptions();
             menuCommand = input.nextLine();
             menuCommand = menuCommand.toLowerCase();
 
             if (menuCommand.equals("q")) {
+                saveLists();
                 appIsRunning = false;
             } else {
                 processMenuCommand(menuCommand);
@@ -43,6 +49,21 @@ public class TrackerApp {
 
         System.out.println("Exiting application...Goodbye!\n");
     }
+
+    // EFFECTS: save state of listColl to LISTS_FILE. Modeled after TellerApp
+    private void saveLists() {
+        try {
+            Writer writer = new Writer(new File(LIST_FILE));
+            writer.write(listColl);
+            writer.close();
+            System.out.println("All lists are saved to file " + LIST_FILE);
+        } catch (IOException e) {
+            System.out.println("Unable to save accounts to " + LIST_FILE);
+            e.printStackTrace();
+        }
+    }
+
+
 
     /*
     * MODIFIES: this
@@ -163,7 +184,7 @@ public class TrackerApp {
         System.out.println("There are currently \"" + listColl.size() + "\" lists.");
         Iterator<MediaList> list = listColl.getList().iterator(); //Adapted from Java iterator documentation
         while (list.hasNext()) {
-            listCollString += list.next().getName();
+            listCollString += "\"" + list.next().getName() + "\"";
             if (list.hasNext()) {
                 listCollString += ", ";
             }
@@ -181,4 +202,6 @@ public class TrackerApp {
         System.out.println("\t3 -> View a list");
         System.out.println("\tq -> Quit application");
     }
+
+
 }

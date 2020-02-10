@@ -19,3 +19,6 @@ As a user, I want to...
 - set a movie/show to watched or not watched
 - change the name of the list
 - change the name of the movie/shows
+
+- be able to save all my lists to file when program exits
+- load my lists when the program starts

@@ -1,5 +1,8 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 //List of MediaItem with a name
@@ -58,5 +61,17 @@ public class MediaList {
             }
         }
         return null;
+    }
+
+    public JSONObject save() {
+        JSONObject mediaList = new JSONObject();
+        mediaList.put("ListName", this.listName);
+        JSONArray arrayOfMediaItem = new JSONArray();
+        for (MediaItem item: mediaItemList) {
+            JSONObject mediaItemObject = item.save();
+            arrayOfMediaItem.put(mediaItemObject);
+        }
+        mediaList.put("itemsInList", arrayOfMediaItem);
+        return mediaList;
     }
 }
