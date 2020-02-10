@@ -7,7 +7,7 @@ import org.json.JSONObject;
 public class MediaItem {
 
     private String mediaName; //Name of the Media
-    private Boolean watched; //State of the media; if it has been watched
+    private String status; //State of the media; if it has been watched
 
     /*
     * REQUIRES: None empty mediaName
@@ -16,7 +16,7 @@ public class MediaItem {
     * */
     public MediaItem(String mediaName) {
         this.mediaName = mediaName;
-        this.watched = false;
+        status = "NOT WATCHED";
     }
 
     public String getName() {
@@ -27,18 +27,18 @@ public class MediaItem {
         this.mediaName = mediaName;
     }
 
-    public void setWatchStatus(Boolean watched) {
-        this.watched = watched;
+    public void setWatchStatus(String watched) {
+        this.status = watched;
     }
 
-    public Boolean getWatchStatus() {
-        return  this.watched;
+    public String getWatchStatus() {
+        return  this.status;
     }
 
     public JSONObject save() {
         JSONObject mediaItem = new JSONObject();
-        mediaItem.put("itemName", mediaName);
-        mediaItem.put("Status", watched.toString());
+        mediaItem.put("mediaName", mediaName);
+        mediaItem.put("status", status);
         return mediaItem;
     }
 }

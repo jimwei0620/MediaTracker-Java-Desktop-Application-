@@ -65,13 +65,13 @@ public class MediaList {
 
     public JSONObject save() {
         JSONObject mediaList = new JSONObject();
-        mediaList.put("ListName", this.listName);
+        mediaList.put("listName", this.listName);
         JSONArray arrayOfMediaItem = new JSONArray();
         for (MediaItem item: mediaItemList) {
             JSONObject mediaItemObject = item.save();
             arrayOfMediaItem.put(mediaItemObject);
         }
-        mediaList.put("itemsInList", arrayOfMediaItem);
+        mediaList.put("mediaItemList", arrayOfMediaItem);
         return mediaList;
     }
 }

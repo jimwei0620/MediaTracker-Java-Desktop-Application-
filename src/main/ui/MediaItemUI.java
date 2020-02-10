@@ -41,11 +41,11 @@ public class MediaItemUI {
     * EFFECTS: print out menu options
     * */
     private void displayMediaItemMenuOptions() {
-        System.out.println("This is the \"" +  mediaItem.getName() + "\"!");
+        System.out.println("This is \"" +  mediaItem.getName() + "\"!");
+        System.out.println(mediaItem.getName() + " is currently " + mediaItem.getWatchStatus() + ".");
         System.out.println("Choose an action:");
-        System.out.println("\t1 -> view item watch status");
-        System.out.println("\t2 -> change item status");
-        System.out.println("\t3 -> change item name");
+        System.out.println("\t1 -> change item status");
+        System.out.println("\t2 -> change item name");
         System.out.println("\tq -> exit list\n");
     }
 
@@ -55,12 +55,9 @@ public class MediaItemUI {
     private void processMediaItemCommand(String mediaItemCommand) {
         switch (mediaItemCommand) {
             case "1":
-                displayMediaItemStatus();
+                processArgument("changeStatus");
                 return;
             case "2":
-                changeMediaItemStatus();
-                return;
-            case "3":
                 processArgument("changeName");
                 return;
             default:
@@ -76,6 +73,9 @@ public class MediaItemUI {
         Boolean processingArgument = true;
 
         while (processingArgument) {
+            if (textCommand.equals("changeStatus")) {
+                displayStatusChoices();
+            }
             System.out.println("Type the name of the media to " + textCommand + ".");
             System.out.println("Type \"CANCEL\" to cancel this operation.\n");
             argument = input.nextLine();
@@ -95,20 +95,44 @@ public class MediaItemUI {
         switch (op) {
             case "changeName":
                 return changeMediaItemName(argument);
+            case "changeStatus":
+                return changeMediaItemStatus(argument);
             default:
                 System.out.println("Internal Error!");
                 return false;
         }
     }
 
+    // EFFECTS: displays choices of statuses to the console
+    private void displayStatusChoices() {
+        System.out.println("Choose an action:");
+        System.out.println("\t1 -> WATCHED");
+        System.out.println("\t2 -> NOT WATCHED");
+        System.out.println("\t3 -> IN PROGRESS");
+    }
+
     /*
     * MODIFIES: this
-    * EFFECTS: change the watch status of mediaItem
+    * EFFECTS: change the watch status of mediaItem, returns true if argument is valid, else return false
     * */
-    private void changeMediaItemStatus() {
-        mediaItem.setWatchStatus(!mediaItem.getWatchStatus());
-        System.out.println("The watch status of the media item has been changed to...");
-        displayMediaItemStatus();
+    private Boolean changeMediaItemStatus(String argument) {
+        switch (argument) {
+            case "1":
+                mediaItem.setWatchStatus("WATCHED");
+                displayMediaItemStatus();
+                return true;
+            case "2":
+                mediaItem.setWatchStatus("NOT WATCHED");
+                displayMediaItemStatus();
+                return true;
+            case "3":
+                mediaItem.setWatchStatus("IN PROGRESS");
+                displayMediaItemStatus();
+                return true;
+            default:
+                System.out.println("That command is invalid!\n");
+                return false;
+        }
     }
 
     /*
@@ -125,11 +149,7 @@ public class MediaItemUI {
     * EFFECT: prints the watch status of mediaItem
     * */
     private void displayMediaItemStatus() {
-        if (mediaItem.getWatchStatus()) {
-            System.out.println("\"" + mediaItem.getName() + "\" has been watched\n");
-        } else {
-            System.out.println("\"" + mediaItem.getName() + "\" has not been Watched\n");
-        }
+        System.out.println("\"" + mediaItem.getName() + "\" is " + mediaItem.getWatchStatus() + "\n");
     }
 
     /*

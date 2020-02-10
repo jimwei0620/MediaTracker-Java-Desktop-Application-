@@ -13,7 +13,7 @@ public class Writer {
 
     // MODIFIES: this
     // EFFECTS: writes SaveAble to file
-    public void write(SaveAble saveable) throws IOException {
+    public void write(SaveAble saveable) {
         saveable.save(file);
     }
 
@@ -22,5 +22,6 @@ public class Writer {
     // NOTE: you MUST call this method when you are done writing data!
     public void close() throws IOException {
         file.flush();
+        file.close();
     }
 }

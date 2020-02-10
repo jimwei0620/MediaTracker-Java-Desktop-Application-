@@ -132,7 +132,7 @@ public class ListUI {
         mediaList.addMedia(newMedia);
         System.out.println("\"" + argument + "\" was successfully added to \""
                         + mediaList.getName() + "\".");
-        System.out.println("\"" + argument + "\" is currently unwatched.\n");
+        System.out.println("\"" + argument + "\" is currently " + newMedia.getWatchStatus() + ".\n");
         return true;
     }
 

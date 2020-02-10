@@ -1,14 +1,16 @@
 package ui;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import model.ListManager;
 import model.MediaList;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
+
+import persistence.Reader;
 import persistence.Writer;
 
 //Media Tracker application Modeled after TellerApp example given for now
@@ -18,7 +20,7 @@ public class TrackerApp {
     private Scanner input; //Input for console.
 
     // EFFECTS: Runs Tracker application
-    public TrackerApp() {
+    public TrackerApp() throws IOException {
         runTracker();
     }
 
@@ -26,12 +28,12 @@ public class TrackerApp {
     * MODIFIES: this
     * EFFECTS: process user input
     * */
-    private void runTracker() {
+    private void runTracker() throws IOException {
         boolean appIsRunning = true;
         String menuCommand;
 
         initApp();
-
+        loadInfo();
 
         while (appIsRunning) {
             displayListColl();
@@ -50,6 +52,19 @@ public class TrackerApp {
         System.out.println("Exiting application...Goodbye!\n");
     }
 
+    // MODIFIES: this
+    // EFFECTS: load info from LIST_FILE. Catch NullPointerException when there are no info in LIST_FILE
+    private void loadInfo() throws IOException {
+        ArrayList<MediaList> listRead = Reader.readFile(LIST_FILE);
+        try {
+            for (MediaList list: listRead) {
+                listColl.addToColl(list);
+            }
+        } catch (NullPointerException e) {
+            System.out.println("There are no lists stored!");
+        }
+    }
+
     // EFFECTS: save state of listColl to LISTS_FILE. Modeled after TellerApp
     private void saveLists() {
         try {
@@ -62,8 +77,6 @@ public class TrackerApp {
             e.printStackTrace();
         }
     }
-
-
 
     /*
     * MODIFIES: this

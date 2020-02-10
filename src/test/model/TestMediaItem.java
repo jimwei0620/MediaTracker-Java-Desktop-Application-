@@ -17,7 +17,7 @@ public class TestMediaItem {
     @Test
     public void testConstruct() {
         assertEquals("Avengers", item1.getName());
-        assertFalse(item1.getWatchStatus());
+        assertEquals("NOT WATCHED" ,item1.getWatchStatus());
     }
 
     @Test
@@ -28,7 +28,7 @@ public class TestMediaItem {
 
     @Test
     public void testSetWatchStatus() {
-        item1.setWatchStatus(true);
-        assertTrue(item1.getWatchStatus());
+        item1.setWatchStatus("WATCHED");
+        assertEquals("WATCHED" ,item1.getWatchStatus());
     }
 }
