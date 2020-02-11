@@ -4,8 +4,6 @@ import exceptions.EmptyStringException;
 import exceptions.NullDataException;
 import model.MediaItem;
 import model.MediaList;
-import sun.invoke.empty.Empty;
-
 
 import java.util.Iterator;
 import java.util.Scanner;
