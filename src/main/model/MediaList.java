@@ -1,6 +1,7 @@
 package model;
 
 import exceptions.EmptyStringException;
+import exceptions.NullDataException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -63,7 +64,7 @@ public class MediaList {
     * EFFECTS: Search media with mediaName in the mediaList returns null if media with mediaName is not found,
     * else return the MediaItem with the name. Throws EmptyStringException if mediaName is empty
     * */
-    public MediaItem getMediaItemByName(String mediaName) throws EmptyStringException {
+    public MediaItem getMediaItemByName(String mediaName) throws EmptyStringException, NullDataException {
         if (mediaName.isEmpty()) {
             throw new EmptyStringException();
         }
@@ -72,7 +73,7 @@ public class MediaList {
                 return item;
             }
         }
-        return null;
+        throw new NullDataException();
     }
 
     // EFFECTS: save details of the MediaList and return it as a JsonObject

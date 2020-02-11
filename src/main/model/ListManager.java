@@ -2,6 +2,7 @@ package model;
 
 
 import exceptions.EmptyStringException;
+import exceptions.NullDataException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.SaveAble;
@@ -50,7 +51,7 @@ public class ListManager implements SaveAble {
     * EFFECTS: Find and return MediaList in mediaListColl has the matching name, else return null
     * throws EmptyStringException if String is empty
     * */
-    public MediaList findMediaListByName(String name) throws EmptyStringException {
+    public MediaList findMediaListByName(String name) throws EmptyStringException, NullDataException {
         if (name.isEmpty()) {
             throw new EmptyStringException();
         }
@@ -59,7 +60,7 @@ public class ListManager implements SaveAble {
                 return list;
             }
         }
-        return null;
+        throw new NullDataException();
     }
 
     /*
@@ -69,6 +70,7 @@ public class ListManager implements SaveAble {
         return mediaListColl;
     }
 
+    // EFFECTS: Get data from all Lists and write to a json file
     @Override
     public void save(FileWriter file) {
         JSONArray arrayOfLists = new JSONArray();

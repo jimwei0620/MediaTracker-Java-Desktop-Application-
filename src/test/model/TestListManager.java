@@ -1,6 +1,7 @@
 package model;
 
 import exceptions.EmptyStringException;
+import exceptions.NullDataException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -51,15 +52,41 @@ public class TestListManager {
     @Test
     public void testFindMediaListByName() {
         try {
-            assertEquals(null, listManager.findMediaListByName("To watch list"));
             MediaList mediaList = new MediaList("To watch list");
             MediaList mediaList1 = new MediaList("Watched list");
             listManager.addToColl(mediaList);
             listManager.addToColl(mediaList1);
             assertEquals(mediaList, listManager.findMediaListByName("To watch list"));
             assertEquals(mediaList1, listManager.findMediaListByName("Watched list"));
+        } catch (EmptyStringException | NullDataException e) {
+            e.printStackTrace();
+            fail("Should not have ran into any Exception");
+        }
+    }
+
+    @Test
+    public void testFineMediaListByEmptyName() {
+        try {
+            MediaList mediaList = new MediaList("To watch list");
+            listManager.addToColl(mediaList);
+            listManager.findMediaListByName("");
+        } catch (EmptyStringException e) {
+            //expected
+        } catch (NullDataException e) {
+            fail("Should have ran into EmptyStringException first");
+        }
+    }
+
+    @Test
+    public void testFineMediaListByNullList() {
+        try {
+            MediaList mediaList = new MediaList("To watch list");
+            listManager.addToColl(mediaList);
+            listManager.findMediaListByName("do not exist");
         } catch (EmptyStringException e) {
             fail("Should not have ran into EmptyStringException");
+        } catch (NullDataException e) {
+           //expected
         }
     }
 

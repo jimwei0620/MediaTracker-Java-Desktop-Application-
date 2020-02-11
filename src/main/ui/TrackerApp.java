@@ -2,6 +2,7 @@ package ui;
 
 
 import exceptions.EmptyStringException;
+import exceptions.NullDataException;
 import model.ListManager;
 import model.MediaList;
 
@@ -138,7 +139,12 @@ public class TrackerApp {
             case "delete":
                 return deleteList(argument);
             case "select":
-                return startListApp(argument);
+                try {
+                    return startListApp(argument);
+                } catch (NullDataException e) {
+                    System.out.println("List with that name couldn't be found. Please try again!");
+                    return false;
+                }
             default:
                 System.out.println("Internal Error!");
                 return false;
@@ -170,15 +176,10 @@ public class TrackerApp {
     private Boolean deleteList(String argument) {
         try {
             MediaList mediaListToDelete = listColl.findMediaListByName(argument);
-            if (mediaListToDelete == null) {
-                System.out.println("Sorry, list with name \"" + argument + "\" was not found. Please try again.");
-                return false;
-            } else {
-                listColl.remove(mediaListToDelete);
-                System.out.println("\"" + argument + "\" was successfully deleted.\n");
-                return true;
-            }
-        } catch (EmptyStringException e) {
+            listColl.remove(mediaListToDelete);
+            System.out.println("\"" + argument + "\" was successfully deleted.\n");
+            return true;
+        } catch (EmptyStringException | NullDataException e) {
             System.out.println("Name of the list to delete cannot be empty! Try again!");
             return false;
         }
@@ -188,16 +189,11 @@ public class TrackerApp {
     * EFFECTS: start ListApp if list with listName is in listColl and return true, else return false;
     * Catches EmptyStringException
     * */
-    private Boolean startListApp(String listName) {
+    private Boolean startListApp(String listName) throws NullDataException {
         try {
             MediaList listToView = listColl.findMediaListByName(listName);
-            if (listToView == null) {
-                System.out.println("Sorry! the list with name \"" + listName + "\" was not found! Please try again.");
-                return false;
-            } else {
-                new ListUI(listToView);
-                return true;
-            }
+            new ListUI(listToView);
+            return true;
         } catch (EmptyStringException e) {
             System.out.println("Name of the list cannot be empty! Try again!");
             return false;

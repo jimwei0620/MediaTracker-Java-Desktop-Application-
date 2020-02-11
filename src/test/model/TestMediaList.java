@@ -1,6 +1,7 @@
 package model;
 
 import exceptions.EmptyStringException;
+import exceptions.NullDataException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,9 +15,18 @@ public class TestMediaList {
     @BeforeEach
     public void runBefore() {
         try {
-        list1 = new MediaList("List1");
+            list1 = new MediaList("List1");
         } catch (EmptyStringException e){
             fail("Should not have ran into EmptyStringException");
+        }
+    }
+
+    @Test
+    public void testMediaListInitEmpty() {
+        try {
+            MediaList newList = new MediaList("");
+        } catch (EmptyStringException e) {
+            //expected
         }
     }
 
@@ -35,6 +45,15 @@ public class TestMediaList {
             fail("Should not have ran into EmptyStringException");
         }
         assertEquals("List2", list1.getName());
+    }
+
+    @Test
+    public void testSetEmptyName() {
+        try {
+            list1.setName("");
+        } catch (EmptyStringException e) {
+            //expected
+        }
     }
 
     @Test
@@ -70,10 +89,36 @@ public class TestMediaList {
         try {
             MediaItem newMedia1 = new MediaItem("Avengers");
             list1.addMedia(newMedia1);
-            assertNull(list1.getMediaItemByName("Endgame"));
             assertEquals(newMedia1, list1.getMediaItemByName("Avengers"));
+        } catch (EmptyStringException | NullDataException e) {
+            e.printStackTrace();
+            fail("Should not have ran into Exception!");
+        }
+    }
+
+    @Test
+    public void testGetMediaItemByEmptyName() {
+        try {
+            MediaItem newMedia1 = new MediaItem("Avengers");
+            list1.addMedia(newMedia1);
+           list1.getMediaItemByName("");
         } catch (EmptyStringException e) {
-            fail("Should not have ran into EmptyStringException");
+            //expected
+        } catch (NullDataException e) {
+            fail("Should not have ran into Exception!");
+        }
+    }
+
+    @Test
+    public void testGetMediaItemByNull() {
+        try {
+            MediaItem newMedia1 = new MediaItem("Avengers");
+            list1.addMedia(newMedia1);
+            list1.getMediaItemByName("do not exist");
+        } catch (EmptyStringException e) {
+            fail("Should not have ran into Exception!");
+        } catch (NullDataException e) {
+            //expected
         }
     }
 }
