@@ -2,8 +2,6 @@ package model;
 
 import exceptions.EmptyStringException;
 import exceptions.InvalidRatingException;
-import exceptions.NullRatingException;
-import exceptions.NullTypeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -86,6 +84,15 @@ public class TestMediaItem {
     }
 
     @Test
+    public void testSetInvalidRating2() {
+        try {
+            item1.setRating(11f);
+        } catch (InvalidRatingException e) {
+            //expected
+        }
+    }
+
+    @Test
     public void testGetNullRating() {
         try {
             item1.getRating();
@@ -117,7 +124,7 @@ public class TestMediaItem {
         try {
             assertEquals("Movie", item1.getType());
         } catch (NullPointerException e) {
-            fail("Should not have thrown NullTypeException");
+            fail("Should not have thrown NullPointerException");
         }
     }
 
