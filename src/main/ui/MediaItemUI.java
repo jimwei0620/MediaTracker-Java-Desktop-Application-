@@ -2,6 +2,7 @@ package ui;
 
 import exceptions.EmptyStringException;
 import exceptions.InvalidRatingException;
+import exceptions.ItemNotFoundException;
 import model.MediaItem;
 
 import java.util.Scanner;
@@ -36,7 +37,11 @@ public class MediaItemUI {
                 processMediaItemCommand(mediaItemCommand);
             }
         }
-        System.out.println("Exiting \"" + mediaItem.getName() + "\". Back to List!\n");
+        try {
+            System.out.println("Exiting \"" + mediaItem.getItemInfo("Title") + "\". Back to List!\n");
+        } catch (ItemNotFoundException e) {
+            System.out.println("Internal Error!");
+        }
     }
 
     /*
@@ -44,20 +49,25 @@ public class MediaItemUI {
     * */
     private void displayMediaItemMenuOptions() {
         String type;
-        Float rating;
-
-        System.out.println("This is \"" +  mediaItem.getName() + "\"!");
-        System.out.println(mediaItem.getName() + " is currently " + mediaItem.getWatchStatus() + ".");
-        type = mediaItem.getType();
-        rating = mediaItem.getRating();
-        System.out.println("Rating: " + rating + " Type: " + type + "\nComments: " + mediaItem.getComment() + "\n");
-        System.out.println("Choose an action:");
-        System.out.println("\t1 -> change item status");
-        System.out.println("\t2 -> change item name");
-        System.out.println("\t3 -> change item rating");
-        System.out.println("\t4 -> edit item comment");
-        System.out.println("\t5 -> change item type");
-        System.out.println("\tq -> exit item\n");
+        String rating;
+        try {
+            String title = mediaItem.getItemInfo("Title");
+            System.out.println("This is \"" + title + "\"!");
+            System.out.println(title + " is currently " + mediaItem.getItemInfo("Status") + ".");
+            type = mediaItem.getItemInfo("Type");
+            rating = mediaItem.getItemInfo("UserRating");
+            System.out.println("Rating: " + rating + " Type: " + type
+                    + "\nComments: " + mediaItem.getItemInfo("UserComments") + "\n");
+            System.out.println("Choose an action:");
+            System.out.println("\t1 -> change item status");
+            System.out.println("\t2 -> change item name");
+            System.out.println("\t3 -> change item rating");
+            System.out.println("\t4 -> edit item comment");
+            System.out.println("\t5 -> change item type");
+            System.out.println("\tq -> exit item\n");
+        } catch (ItemNotFoundException e) {
+            System.out.println("Internal Error!");
+        }
     }
 
     /*
@@ -99,18 +109,14 @@ public class MediaItemUI {
             if (textCommand.equals("changeType")) {
                 displayMediaItemTypeChoices();
             }
-            System.out.println("Type the name of the media to " + textCommand + ".");
+            System.out.println("Type the information to " + textCommand + ".");
             System.out.println("Type \"CANCEL\" to cancel this operation.\n");
             argument = input.nextLine();
             if (argument.equals("CANCEL")) {
                 System.out.println("Operation was cancelled.\n");
                 processingArgument = false;
             } else {
-                try {
-                    processingArgument = !processOperation(textCommand, argument);
-                } catch (EmptyStringException e) {
-                    System.out.println("Please enter something!");
-                }
+                processingArgument = !processOperation(textCommand, argument);
             }
         }
     }
@@ -118,7 +124,7 @@ public class MediaItemUI {
     /*
      * EFFECTS: process operation specified with argument. returns true if operation is successful else return false
      *  */
-    private Boolean processOperation(String op, String argument) throws EmptyStringException {
+    private Boolean processOperation(String op, String argument) {
         switch (op) {
             case "changeName":
                 return changeMediaItemName(argument);
@@ -137,7 +143,11 @@ public class MediaItemUI {
     }
 
     private Boolean editMediaItemComment(String argument) {
-        mediaItem.setComment(argument);
+        try {
+            mediaItem.setItemInfo("UserComments", argument);
+        } catch (ItemNotFoundException e) {
+            System.out.println("Internal Error!");
+        }
         return true;
     }
 
@@ -147,35 +157,32 @@ public class MediaItemUI {
         System.out.println("\t1 -> MOVIE");
         System.out.println("\t2 -> TV SHOW");
         System.out.println("\t3 -> ANIMATION");
-        System.out.println("\t4 -> MANGA");
-        System.out.println("\t5 -> COMIC");
-        System.out.println("\t6 -> OTHER");
+        System.out.println("\t4 -> OTHER");
     }
 
     // EFFECTS: change media type based on argument
     private Boolean changeMediaItemType(String argument) {
-        switch (argument) {
-            case "1":
-                mediaItem.setType("MOVIE");
-                return true;
-            case "2":
-                mediaItem.setType("TV SHOW");
-                return true;
-            case "3":
-                mediaItem.setType("ANIMATION");
-                return true;
-            case "4":
-                mediaItem.setType("MANGA");
-                return true;
-            case "5":
-                mediaItem.setType("COMIC");
-                return true;
-            case "6":
-                mediaItem.setType("OTHER");
-                return true;
-            default:
-                System.out.println("That choice is invalid. Please try again!");
-                return false;
+        try {
+            switch (argument) {
+                case "1":
+                    mediaItem.setItemInfo("Type", "MOVIE");
+                    return true;
+                case "2":
+                    mediaItem.setItemInfo("Type", "TV SHOW");
+                    return true;
+                case "3":
+                    mediaItem.setItemInfo("Type", "ANIMATION");
+                    return true;
+                case "4":
+                    mediaItem.setItemInfo("Type", "OTHER");
+                    return true;
+                default:
+                    System.out.println("That choice is invalid. Please try again!");
+                    return false;
+            }
+        } catch (ItemNotFoundException e) {
+            System.out.println("Internal Error");
+            return false;
         }
     }
 
@@ -184,14 +191,14 @@ public class MediaItemUI {
     // returns true if successful, else false
     private Boolean changeMediaItemRating(String argument) {
         try {
-            Float rating = Float.parseFloat(argument);
-            mediaItem.setRating(rating);
+            Float checkNum = Float.parseFloat(argument);
+            mediaItem.setItemInfo("UserRating", argument);
             return true;
         } catch (NumberFormatException e) {
             System.out.println("You did not enter a valid rating! Please try again!");
             return false;
-        } catch (InvalidRatingException e) {
-            System.out.println("Please provide a number from 0 - 10");
+        } catch (ItemNotFoundException e) {
+            System.out.println("Internal Error");
             return false;
         }
     }
@@ -209,23 +216,28 @@ public class MediaItemUI {
     * MODIFIES: this
     * EFFECTS: change the watch status of mediaItem, returns true if argument is valid, else return false
     * */
-    private Boolean changeMediaItemStatus(String argument) throws EmptyStringException {
-        switch (argument) {
-            case "1":
-                mediaItem.setWatchStatus("WATCHED");
-                displayMediaItemStatus();
-                return true;
-            case "2":
-                mediaItem.setWatchStatus("NOT WATCHED");
-                displayMediaItemStatus();
-                return true;
-            case "3":
-                mediaItem.setWatchStatus("IN PROGRESS");
-                displayMediaItemStatus();
-                return true;
-            default:
-                System.out.println("That command is invalid!\n");
-                return false;
+    private Boolean changeMediaItemStatus(String argument) {
+        try {
+            switch (argument) {
+                case "1":
+                    mediaItem.setItemInfo("Status", "WATCHED");
+                    displayMediaItemStatus();
+                    return true;
+                case "2":
+                    mediaItem.setItemInfo("Status", "NOT WATCHED");
+                    displayMediaItemStatus();
+                    return true;
+                case "3":
+                    mediaItem.setItemInfo("Status", "IN PROGRESS");
+                    displayMediaItemStatus();
+                    return true;
+                default:
+                    System.out.println("That command is invalid!\n");
+                    return false;
+            }
+        } catch (ItemNotFoundException e) {
+            System.out.println("Internal Error");
+            return false;
         }
     }
 
@@ -235,11 +247,11 @@ public class MediaItemUI {
     * */
     private Boolean changeMediaItemName(String argument) {
         try {
-            mediaItem.setName(argument);
-            System.out.println("\"" + mediaItem.getName() + "\" was successfully set as the new name!\n");
+            mediaItem.setItemInfo("Title", argument);
+            System.out.println("\"" + mediaItem.getItemInfo("Title") + "\" was successfully set as the new name!\n");
             return true;
-        } catch (EmptyStringException e) {
-            System.out.println("The name of the media cannot be empty! Please try again!");
+        } catch (ItemNotFoundException e) {
+            System.out.println("Internal Error");
             return false;
         }
     }
@@ -248,7 +260,12 @@ public class MediaItemUI {
     * EFFECT: prints the watch status of mediaItem
     * */
     private void displayMediaItemStatus() {
-        System.out.println("\"" + mediaItem.getName() + "\" is " + mediaItem.getWatchStatus() + "\n");
+        try {
+            System.out.println("\"" + mediaItem.getItemInfo("Title") + "\" is "
+                    + mediaItem.getItemInfo("Status") + "\n");
+        } catch (ItemNotFoundException e) {
+            System.out.println("Internal Error");
+        }
     }
 
     /*

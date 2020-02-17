@@ -6,6 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,23 +35,23 @@ public class TestMediaList {
 
     @Test
     public void testConstruct() {
-        assertEquals(list1.getName(), "List1");
-        ArrayList<MediaItem> sampleList = list1.getList();
-        assertEquals(0, sampleList.size());
+        Calendar calendar = Calendar.getInstance();
+        assertEquals("List1", list1.getName());
+        assertEquals(calendar.getTime().toString(), list1.getDate());
     }
 
     @Test
     public void testSetName() {
         try {
-            list1.setName("List2");
+            list1.setName("New Name");
+            assertEquals("New Name", list1.getName());
         } catch (EmptyStringException e) {
-            fail("Should not have ran into EmptyStringException");
+            fail("Should not have ran into Exception");
         }
-        assertEquals("List2", list1.getName());
     }
 
     @Test
-    public void testSetEmptyName() {
+    public void testSetNameException() {
         try {
             list1.setName("");
         } catch (EmptyStringException e) {
@@ -57,68 +60,34 @@ public class TestMediaList {
     }
 
     @Test
-    public void testAddMedia() {
+    public void testIsEqauls() {
         try {
-        MediaItem newMedia = new MediaItem("Avengers");
-        list1.addMedia(newMedia);
-        ArrayList<MediaItem> toWatchListArray = list1.getList();
-        assertEquals(1, toWatchListArray.size());
+            MediaList mediaList2 = new MediaList("List1");
+            MediaList mediaList3 = new MediaList("list1");
+            assertEquals(list1, mediaList2);
+            assertNotEquals(list1, mediaList3);
         } catch (EmptyStringException e) {
-            fail("Should not have ran into EmptyStringException");
+            fail("Should not have ran into Exception");
         }
     }
 
     @Test
-    public void testRemoveMedia() {
-        try {
-            MediaItem newMedia1 = new MediaItem("Avengers");
-            MediaItem newMedia2 = new MediaItem("Endgame");
-            list1.addMedia(newMedia1);
-            list1.addMedia(newMedia2);
-            list1.removeMedia(newMedia1);
-            ArrayList<MediaItem> toWatchListArray = list1.getList();
-            assertEquals(1, toWatchListArray.size());
-            assertEquals(newMedia2, toWatchListArray.get(0));
-        } catch (EmptyStringException e){
-            fail("Should not have ran into EmptyStringException");
-        }
+    public void testIsEqualsNull() {
+        MediaItem mediaItem = new UserMediaItem("test");
+        assertNotEquals(list1, mediaItem);
     }
 
     @Test
-    public void testGetItemByName() {
+    public void testHashCode() {
+        Map<MediaList, String> hashCode = new HashMap<>();
         try {
-            MediaItem newMedia1 = new MediaItem("Avengers");
-            list1.addMedia(newMedia1);
-            assertEquals(newMedia1, list1.getMediaItemByName("Avengers"));
-        } catch (EmptyStringException | NullDataException e) {
-            e.printStackTrace();
-            fail("Should not have ran into Exception!");
-        }
-    }
-
-    @Test
-    public void testGetMediaItemByEmptyName() {
-        try {
-            MediaItem newMedia1 = new MediaItem("Avengers");
-            list1.addMedia(newMedia1);
-           list1.getMediaItemByName("");
+            MediaList mediaList2 = new MediaList("List1");
+            MediaList mediaList3 = new MediaList("list1");
+            hashCode.put(list1, "test");
+            assertEquals("test", hashCode.get(mediaList2));
+            assertFalse(hashCode.containsKey(mediaList3));
         } catch (EmptyStringException e) {
-            //expected
-        } catch (NullDataException e) {
-            fail("Should not have ran into Exception!");
-        }
-    }
-
-    @Test
-    public void testGetMediaItemByNull() {
-        try {
-            MediaItem newMedia1 = new MediaItem("Avengers");
-            list1.addMedia(newMedia1);
-            list1.getMediaItemByName("do not exist");
-        } catch (EmptyStringException e) {
-            fail("Should not have ran into Exception!");
-        } catch (NullDataException e) {
-            //expected
+            fail("Should not have ran into Exception");
         }
     }
 }

@@ -9,5 +9,5 @@ public interface SaveAble {
 
     // MODIFIES: printWriter
     // EFFECTS: writes the SaveAble to printerWriter
-    void save(FileWriter file);
+    void save(FileWriter listFile, FileWriter tagFile, FileWriter itemFile);
 }

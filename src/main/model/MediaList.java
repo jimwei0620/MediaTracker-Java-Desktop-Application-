@@ -4,35 +4,31 @@ import exceptions.EmptyStringException;
 import exceptions.NullDataException;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import persistence.SaveAble;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Objects;
 
 //List of MediaItem with a name
 public class MediaList {
 
-    protected ArrayList<MediaItem> mediaItemList; //List that holds all the MediaItem
-    protected String listName; //Name of the list
+    private String listName; //Name of the list
+    private String date;
 
-    /*
-     * MODIFIES: this
-     * EFFECTS: Initializes an empty list with type of MediaItems, sets the name of the list to listName. throws
-     * EmptyStringException if listName is empty.
-     * */
-    public MediaList(String listName) throws EmptyStringException {
-        if (listName.isEmpty()) {
+    public MediaList(String name) throws EmptyStringException {
+        if (name.isEmpty()) {
             throw new EmptyStringException();
         }
-        this.listName = listName;
-        this.mediaItemList = new ArrayList<>();
+        this.listName = name;
+        Calendar calendar = Calendar.getInstance();
+        this.date = calendar.getTime().toString();
     }
 
     public String getName() {
         return this.listName;
     }
 
-    // MODIFIES: this
-    // EFFECTS: set the name of the list to newName. Throws EmptyString Exception if
-    // newName is empty
     public void setName(String newName) throws EmptyStringException {
         if (newName.isEmpty()) {
             throw new EmptyStringException();
@@ -40,52 +36,33 @@ public class MediaList {
         this.listName = newName;
     }
 
-    public ArrayList<MediaItem> getList() {
-        return this.mediaItemList;
+    public String getDate() {
+        return date;
     }
 
-    /*
-    * MODIFIES: this
-    * EFFECTS: media is added to the mediaList
-    * */
-    public void addMedia(MediaItem media) {
-        mediaItemList.add(media);
-    }
 
-    /*
-    * MODIFIES: this
-    * EFFECTS: remove media from mediaList
-    * */
-    public void removeMedia(MediaItem media) {
-        mediaItemList.remove(media);
-    }
-
-    /*
-    * EFFECTS: Search media with mediaName in the mediaList returns null if media with mediaName is not found,
-    * else return the MediaItem with the name. Throws EmptyStringException if mediaName is empty
-    * */
-    public MediaItem getMediaItemByName(String mediaName) throws EmptyStringException, NullDataException {
-        if (mediaName.isEmpty()) {
-            throw new EmptyStringException();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
         }
-        for (MediaItem item: mediaItemList) {
-            if (item.getName().equals(mediaName)) {
-                return item;
-            }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
         }
-        throw new NullDataException();
+        MediaList mediaList = (MediaList) o;
+        return listName.equals(mediaList.listName);
     }
 
-    // EFFECTS: save details of the MediaList and return it as a JsonObject
+    @Override
+    public int hashCode() {
+        return Objects.hash(listName);
+    }
+
+    // EFFECTS: save the information of the object into json
     public JSONObject save() {
-        JSONObject mediaList = new JSONObject();
-        mediaList.put("listName", this.listName);
-        JSONArray arrayOfMediaItem = new JSONArray();
-        for (MediaItem item: mediaItemList) {
-            JSONObject mediaItemObject = item.save();
-            arrayOfMediaItem.put(mediaItemObject);
-        }
-        mediaList.put("mediaItemList", arrayOfMediaItem);
-        return mediaList;
+        JSONObject mediaListObject = new JSONObject();
+        mediaListObject.put("listName", this.listName);
+        mediaListObject.put("date", this.date);
+        return mediaListObject;
     }
 }

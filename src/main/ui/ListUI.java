@@ -1,19 +1,27 @@
 package ui;
 
+import exceptions.DataExistAlreadyException;
 import exceptions.EmptyStringException;
+import exceptions.ItemNotFoundException;
 import exceptions.NullDataException;
-import model.MediaItem;
-import model.MediaList;
+import model.*;
 
+import javax.management.openmbean.KeyAlreadyExistsException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Scanner;
 
 public class ListUI {
     private Scanner input;
     private MediaList mediaList;
+    private ArrayList<MediaItem> listOfItems;
+    private ListManager listcoll;
 
     // EFFECTS: Runs the interface for a MediaList
-    public ListUI(MediaList mediaList) {
+    public ListUI(MediaList mediaList, ArrayList<MediaItem> listOfItems, ListManager listManager) {
+        this.listOfItems = listOfItems;
+        this.listcoll = listManager;
         runMediaList(mediaList);
     }
 
@@ -90,16 +98,18 @@ public class ListUI {
      * EmptyStringException.
      * */
     private Boolean addNewMediaToList(String argument) {
-        MediaItem newMedia;
+        UserMediaItem newMedia;
         try {
-            newMedia = new MediaItem(argument);
-            mediaList.addMedia(newMedia);
+            newMedia = new UserMediaItem(argument);
+            listcoll.addMediaItemToList(mediaList, newMedia);
             System.out.println("\"" + argument + "\" was successfully added to \""
                     + mediaList.getName() + "\".");
-            System.out.println("\"" + argument + "\" is currently " + newMedia.getWatchStatus() + ".\n");
-        } catch (EmptyStringException e) {
-            System.out.println("Name of the new Media cannot be empty! Try again!");
-            return false;
+            System.out.println("\"" + argument + "\" is currently " + newMedia.getItemInfo("Status") + ".\n");
+        } catch (ItemNotFoundException | DataExistAlreadyException e) {
+            System.out.println("Internal Error");
+            e.printStackTrace();
+        } catch (KeyAlreadyExistsException e) {
+            System.out.println("There is already an item in the list with that name!");
         }
         return true;
     }
@@ -112,21 +122,11 @@ public class ListUI {
             case "add":
                 return addNewMediaToList(argument);
             case "delete":
-                try {
-                    return deleteMediaFromList(argument);
-                } catch (NullDataException e) {
-                    System.out.println("Unable to find item with that name! Please try again!");
-                    return false;
-                }
+                return deleteMediaFromList(argument);
             case "changeName":
                 return changeMediaListName(argument);
             case "select":
-                try {
-                    return viewMediaItem(argument);
-                } catch (NullDataException e) {
-                    System.out.println("Unable to find item with that name! Please try again!");
-                    return false;
-                }
+                return viewMediaItem(argument);
             default:
                 System.out.println("Internal Error!");
                 return false;
@@ -138,9 +138,13 @@ public class ListUI {
     * */
     private void displayList() {
         String listToDisplay = mediaList.getName() + " : ";
-        Iterator<MediaItem> list = mediaList.getList().iterator(); //Adapted from Java iterator documentation
+        Iterator<MediaItem> list = listOfItems.iterator(); //Adapted from Java iterator documentation
         while (list.hasNext()) {
-            listToDisplay += "\"" + list.next().getName() + "\"";
+            try {
+                listToDisplay += "\"" + list.next().getItemInfo("Title") + "\"";
+            } catch (ItemNotFoundException e) {
+                System.out.println("Internal Error");
+            }
             if (list.hasNext()) {
                 listToDisplay += ", ";
             }
@@ -158,16 +162,16 @@ public class ListUI {
     * EFFECTS: delete a MediaItem with name argument from the list. Return true if successful, else return false
     * Catches EmptyStringException.
     * */
-    private Boolean deleteMediaFromList(String argument) throws NullDataException {
+    private Boolean deleteMediaFromList(String argument) {
         MediaItem mediaFound;
         try {
-            mediaFound = mediaList.getMediaItemByName(argument);
-            mediaList.removeMedia(mediaFound);
+            mediaFound = listcoll.getMediaItemInListByName(argument, listOfItems);
+            listcoll.deleteMediaItemFromList(mediaList, mediaFound);
             System.out.println("\"" + argument + "\""  + " has been successfully deleted from \""
                     + mediaList.getName() + "\n");
             return true;
-        } catch (EmptyStringException e) {
-            System.out.println("Name of the media cannot be empty! Try again!");
+        } catch (ItemNotFoundException e) {
+            System.out.println("Item with that name was not found! try again!");
             return false;
         }
     }
@@ -192,15 +196,15 @@ public class ListUI {
     * EFFECTS: open the MediaItemApp for a user specific media with name argument. Returns true if
     *          MediaItem was found, else return false
     * */
-    private Boolean viewMediaItem(String argument) throws NullDataException {
+    private Boolean viewMediaItem(String argument) {
         try {
             MediaItem mediaFound;
-            mediaFound = mediaList.getMediaItemByName(argument);
+            mediaFound = listcoll.getMediaItemInListByName(argument, listOfItems);
             new MediaItemUI(mediaFound);
             return true;
-        } catch (EmptyStringException e) {
-            System.out.println("Name of the media cannot be empty! Try again!");
-            return false;
+        } catch (ItemNotFoundException e) {
+            System.out.println("Item with that name was not found. Try again!");
+            return  false;
         }
     }
 

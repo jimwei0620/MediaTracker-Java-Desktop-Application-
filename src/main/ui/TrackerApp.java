@@ -1,10 +1,11 @@
 package ui;
 
 
+import exceptions.DataExistAlreadyException;
 import exceptions.EmptyStringException;
+import exceptions.ItemNotFoundException;
 import exceptions.NullDataException;
-import model.ListManager;
-import model.MediaList;
+import model.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -12,12 +13,18 @@ import java.util.Iterator;
 import java.util.Scanner;
 
 
+import persistence.ReadUserItem;
 import persistence.Reader;
 import persistence.Writer;
 
+import javax.management.openmbean.KeyAlreadyExistsException;
+
 //Media Tracker application Modeled after TellerApp example given for now
 public class TrackerApp {
-    private static final String LIST_FILE = "./data/lists.json";
+    private static final String LIST_FILE = "./data/listFile.json";
+    private static final String TAG_FILE = "./data/tagFile.json";
+    private static final String ITEM_FILE = "./data/userItemFile.json";
+
     private ListManager listColl;
     private Scanner input; //Input for console.
 
@@ -44,7 +51,7 @@ public class TrackerApp {
             menuCommand = menuCommand.toLowerCase();
 
             if (menuCommand.equals("q")) {
-                saveLists();
+                saveProgram();
                 appIsRunning = false;
             } else {
                 processMenuCommand(menuCommand);
@@ -57,20 +64,104 @@ public class TrackerApp {
     // MODIFIES: this
     // EFFECTS: load info from LIST_FILE. Catch NullPointerException when there are no info in LIST_FILE
     private void loadInfo() throws IOException {
-        ArrayList<MediaList> listRead = Reader.readFile(LIST_FILE);
-        try {
-            for (MediaList list: listRead) {
-                listColl.addToColl(list);
+        System.out.println("Reading data from files......");
+        ArrayList<ReadUserItem> userItemRead = Reader.readItemFile(ITEM_FILE);
+        ArrayList<Tag> tagRead = Reader.readTagFile(TAG_FILE);
+        ArrayList<MediaList> listRead = Reader.readListFile(LIST_FILE);
+        System.out.println("Loading tags......");
+        processTagData(tagRead);
+        System.out.println("Loading lists......");
+        processListData(listRead);
+        System.out.println("Loading items......");
+        processUserItemData(userItemRead);
+        System.out.println("Data has been loaded.");
+    }
+
+    private void processTagData(ArrayList<Tag> tagRead) {
+        if (tagRead != null) {
+            for (Tag tag: tagRead) {
+                listColl.addNewTag(tag);
             }
-        } catch (NullPointerException e) {
-            System.out.println("There are no lists stored!");
+        } else {
+            System.out.println("There are no tags!");
+        }
+
+    }
+
+    private void processListData(ArrayList<MediaList> listRead) {
+        if (listRead != null) {
+            for (MediaList list: listRead) {
+                listColl.addNewList(list);
+            }
+        } else {
+            System.out.println("There are no lists");
+        }
+    }
+
+    private void processUserItemData(ArrayList<ReadUserItem> userItemRead) {
+        if (userItemRead != null) {
+            ArrayList<UserMediaItem> userMediaItems = processAllItems(userItemRead);
+            listColl.getAllUserMediaItems().addAll(userMediaItems);
+            loadToLists(userMediaItems);
+            loadToTags(userMediaItems);
+
+        } else {
+            System.out.println("There are no items!");
+        }
+    }
+
+    private ArrayList<UserMediaItem> processAllItems(ArrayList<ReadUserItem> itemRead) {
+        ArrayList<UserMediaItem> userMediaItemArrayList = new ArrayList<>();
+        for (ReadUserItem item: itemRead) {
+            UserMediaItem userMediaItem = new UserMediaItem(item.getTitle());
+            try {
+                userMediaItem.setItemInfo("Status", item.getStatus());
+                userMediaItem.setItemInfo("UserRating", item.getUserRating());
+                userMediaItem.setItemInfo("Type", item.getType());
+                userMediaItem.setItemInfo("UserComments", item.getUserComments());
+                userMediaItemArrayList.add(userMediaItem);
+                userMediaItem.getMetaDataOfType("List").addAll(item.getMetaDataList());
+                userMediaItem.getMetaDataOfType("Tag").addAll(item.getMetaDataTag());
+            } catch (ItemNotFoundException e) {
+                e.printStackTrace();
+                System.out.println("Internal Error");
+            }
+        }
+        return userMediaItemArrayList;
+    }
+
+    private void loadToLists(ArrayList<UserMediaItem> userMediaItems) {
+        for (MediaList list: listColl.allActiveLists()) {
+            for (UserMediaItem item: userMediaItems) {
+                if (item.containMetaDataOf("List", list.getName())) {
+                    try {
+                        listColl.getListOfMedia(list).add(item);
+                    } catch (ItemNotFoundException e) {
+                        System.out.println("Internal Error");
+                    }
+                }
+            }
+        }
+    }
+
+    private void loadToTags(ArrayList<UserMediaItem> userMediaItems) {
+        for (Tag tag: listColl.getAllActiveTags()) {
+            for (UserMediaItem item: userMediaItems) {
+                if (item.containMetaDataOf("List", tag.getTagName())) {
+                    try {
+                        listColl.getListOfMediaWithTag(tag).add(item);
+                    } catch (ItemNotFoundException e) {
+                        System.out.println("Internal Error");
+                    }
+                }
+            }
         }
     }
 
     // EFFECTS: save state of listColl to LISTS_FILE. Modeled after TellerApp
-    private void saveLists() {
+    private void saveProgram() {
         try {
-            Writer writer = new Writer(new File(LIST_FILE));
+            Writer writer = new Writer(new File(LIST_FILE), new File(TAG_FILE), new File(ITEM_FILE));
             writer.write(listColl);
             writer.close();
             System.out.println("All lists are saved to file " + LIST_FILE);
@@ -139,12 +230,7 @@ public class TrackerApp {
             case "delete":
                 return deleteList(argument);
             case "select":
-                try {
-                    return startListApp(argument);
-                } catch (NullDataException e) {
-                    System.out.println("List with that name couldn't be found. Please try again!");
-                    return false;
-                }
+                return startListApp(argument);
             default:
                 System.out.println("Internal Error!");
                 return false;
@@ -159,11 +245,14 @@ public class TrackerApp {
     private Boolean addNewList(String argument) {
         try {
             MediaList newMediaList = new MediaList(argument);
-            listColl.addToColl(newMediaList);
+            listColl.addNewList(newMediaList);
             System.out.println("\"" + argument + "\" was successfully added.\n");
             return true;
         } catch (EmptyStringException e) {
             System.out.println("Name of the new list cannot be empty! Try again!");
+            return false;
+        } catch (KeyAlreadyExistsException e) {
+            System.out.println("There is already a list with that name!");
             return false;
         }
     }
@@ -175,12 +264,12 @@ public class TrackerApp {
     * */
     private Boolean deleteList(String argument) {
         try {
-            MediaList mediaListToDelete = listColl.findMediaListByName(argument);
-            listColl.remove(mediaListToDelete);
+            MediaList mediaListToDelete = listColl.getMediaListByName(argument);
+            listColl.removeList(mediaListToDelete);
             System.out.println("\"" + argument + "\" was successfully deleted.\n");
             return true;
-        } catch (EmptyStringException | NullDataException e) {
-            System.out.println("Name of the list to delete cannot be empty! Try again!");
+        } catch (ItemNotFoundException e) {
+            System.out.println("List was not found.");
             return false;
         }
     }
@@ -189,13 +278,13 @@ public class TrackerApp {
     * EFFECTS: start ListApp if list with listName is in listColl and return true, else return false;
     * Catches EmptyStringException
     * */
-    private Boolean startListApp(String listName) throws NullDataException {
+    private Boolean startListApp(String listName) {
         try {
-            MediaList listToView = listColl.findMediaListByName(listName);
-            new ListUI(listToView);
+            MediaList listToView = listColl.getMediaListByName(listName);
+            new ListUI(listToView, listColl.getListOfMedia(listToView), listColl);
             return true;
-        } catch (EmptyStringException e) {
-            System.out.println("Name of the list cannot be empty! Try again!");
+        } catch (ItemNotFoundException e) {
+            System.out.println("List was not found");
             return false;
         }
     }
@@ -205,8 +294,8 @@ public class TrackerApp {
     * */
     private void displayListColl() {
         String listCollString = "Your lists: ";
-        System.out.println("There are currently \"" + listColl.size() + "\" lists.");
-        Iterator<MediaList> list = listColl.getList().iterator(); //Adapted from Java iterator documentation
+        System.out.println("There are currently \"" + listColl.numOfLists() + "\" lists.");
+        Iterator<MediaList> list = listColl.allActiveLists().iterator(); //Adapted from Java iterator documentation
         while (list.hasNext()) {
             listCollString += "\"" + list.next().getName() + "\"";
             if (list.hasNext()) {
