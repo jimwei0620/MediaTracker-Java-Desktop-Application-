@@ -116,13 +116,15 @@ public abstract class MediaItem {
         metaDataList.add(newData);
     }
 
-    // EFFECTS: return true if
-    public Boolean containMetaDataOf(String type, String nameOfObject) {
+    // EFFECTS: return true if item contains metaData with type and nameOfObject
+    public Boolean containMetaDataOf(String type, String nameOfObject) throws ItemNotFoundException {
         ArrayList<MetaData> metaDataList = new ArrayList<>();
         if (type.equals("List")) {
             metaDataList = listData;
         } else if (type.equals("Tag")) {
             metaDataList = tagData;
+        } else {
+            throw new ItemNotFoundException();
         }
         for (MetaData data: metaDataList) {
             if (data.getNameOfObject().equals(nameOfObject)) {
@@ -131,7 +133,6 @@ public abstract class MediaItem {
         }
         return false;
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -142,14 +143,12 @@ public abstract class MediaItem {
             return false;
         }
         MediaItem mediaItem = (MediaItem) o;
-        return itemDetails.equals(mediaItem.itemDetails)
-                && listData.equals(mediaItem.listData)
-                && tagData.equals(mediaItem.tagData);
+        return itemDetails.equals(mediaItem.itemDetails);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(itemDetails, listData, tagData);
+        return Objects.hash(itemDetails);
     }
 
     // EFFECTS: save the information of the object into json

@@ -37,10 +37,14 @@ public class TestTag {
 
     @Test
     public void testIsEqualsNull() {
+        assertNotEquals(tag, null);
+    }
+
+    @Test
+    public void testIsEqualsDiffClass() {
         MediaItem mediaItem = new UserMediaItem("test");
         assertNotEquals(tag, mediaItem);
     }
-
     @Test
     public void testIsEquals() {
         Tag newTag = new Tag(tag.tagName);

@@ -34,8 +34,7 @@ public class TestMetaData {
 
     @Test
     public void testIsEqualsNull() {
-        Tag tag = new Tag("test");
-        assertNotEquals(metaData, tag);
+        assertNotEquals(metaData, null);
     }
 
     @Test
@@ -47,6 +46,12 @@ public class TestMetaData {
     @Test
     public void testIsEqualsSameObject() {
         assertEquals(metaData, metaData);
+    }
+
+    @Test
+    public void testIsEqualsDiffClass() {
+        Tag tag = new Tag("test");
+        assertNotEquals(metaData, tag);
     }
 
 

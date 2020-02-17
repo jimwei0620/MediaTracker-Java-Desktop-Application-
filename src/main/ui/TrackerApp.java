@@ -133,12 +133,16 @@ public class TrackerApp {
     private void loadToLists(ArrayList<UserMediaItem> userMediaItems) {
         for (MediaList list: listColl.allActiveLists()) {
             for (UserMediaItem item: userMediaItems) {
-                if (item.containMetaDataOf("List", list.getName())) {
-                    try {
-                        listColl.getListOfMedia(list).add(item);
-                    } catch (ItemNotFoundException e) {
-                        System.out.println("Internal Error");
+                try {
+                    if (item.containMetaDataOf("List", list.getName())) {
+                        try {
+                            listColl.getListOfMedia(list).add(item);
+                        } catch (ItemNotFoundException e) {
+                            System.out.println("Internal Error");
+                        }
                     }
+                } catch (ItemNotFoundException e) {
+                    System.out.println("Internal Error");
                 }
             }
         }
@@ -147,12 +151,16 @@ public class TrackerApp {
     private void loadToTags(ArrayList<UserMediaItem> userMediaItems) {
         for (Tag tag: listColl.getAllActiveTags()) {
             for (UserMediaItem item: userMediaItems) {
-                if (item.containMetaDataOf("List", tag.getTagName())) {
-                    try {
-                        listColl.getListOfMediaWithTag(tag).add(item);
-                    } catch (ItemNotFoundException e) {
-                        System.out.println("Internal Error");
+                try {
+                    if (item.containMetaDataOf("List", tag.getTagName())) {
+                        try {
+                            listColl.getListOfMediaWithTag(tag).add(item);
+                        } catch (ItemNotFoundException e) {
+                            System.out.println("Internal Error");
+                        }
                     }
+                } catch (ItemNotFoundException e) {
+                    System.out.println("Internal Error");
                 }
             }
         }

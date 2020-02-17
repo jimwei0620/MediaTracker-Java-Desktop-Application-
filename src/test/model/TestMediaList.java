@@ -73,6 +73,11 @@ public class TestMediaList {
 
     @Test
     public void testIsEqualsNull() {
+        assertNotEquals(list1, null);
+    }
+
+    @Test
+    public void testIsEqualsDiffClass() {
         MediaItem mediaItem = new UserMediaItem("test");
         assertNotEquals(list1, mediaItem);
     }

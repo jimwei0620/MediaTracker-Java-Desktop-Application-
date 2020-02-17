@@ -330,6 +330,19 @@ public class TestListManager {
     }
 
     @Test
+    public void testAddMediaToListInAll() {
+        try {
+            MediaList mediaList = new MediaList("test");
+            UserMediaItem mediaItem = new UserMediaItem("testItem");
+            listManager.addNewList(mediaList);
+            listManager.getAllUserMediaItems().add(mediaItem);
+            listManager.addMediaItemToList(mediaList, mediaItem);
+        } catch (DataExistAlreadyException | ItemNotFoundException |EmptyStringException e) {
+            fail("Should not have ran into Exception");
+        }
+    }
+
+    @Test
     public void testGetAllUserMediaItems() {
         assertEquals(0, listManager.getAllUserMediaItems().size());
     }

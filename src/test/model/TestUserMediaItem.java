@@ -135,9 +135,14 @@ public class TestUserMediaItem {
     }
 
     @Test
-    public void testIsEqualsNull() {
+    public void testIsEqualsDiffClass() {
         Tag tag = new Tag("test");
         assertNotEquals(mediaItem, tag);
+    }
+
+    @Test
+    public void testIsEqualsNull() {
+        assertNotEquals(mediaItem, null);
     }
 
     @Test
@@ -201,7 +206,7 @@ public class TestUserMediaItem {
             mediaItem.updateData("List", "yes");
             mediaItem.updateData("List", "no");
             assertTrue(mediaItem.containMetaDataOf("List", "no"));
-        } catch (DataExistAlreadyException e) {
+        } catch (DataExistAlreadyException | ItemNotFoundException e) {
             fail("Should not have ran into exception");
             e.printStackTrace();
         }
@@ -213,14 +218,27 @@ public class TestUserMediaItem {
             mediaItem.updateData("Tag", "action");
             mediaItem.updateData("Tag", "adventure");
             assertTrue(mediaItem.containMetaDataOf("Tag", "adventure"));
-        } catch (DataExistAlreadyException e) {
+        } catch (DataExistAlreadyException | ItemNotFoundException e) {
             fail("Should not have ran into exception");
         }
     }
 
     @Test
+    public void testContainsMetaDataOfException() {
+        try {
+            mediaItem.containMetaDataOf("none", "nope");
+        } catch (ItemNotFoundException e) {
+            //expected
+        }
+    }
+
+    @Test
     public void testNotContainMetaDataOf() {
-        assertFalse(mediaItem.containMetaDataOf("List", "action"));
+        try {
+            assertFalse(mediaItem.containMetaDataOf("List", "action"));
+        } catch (ItemNotFoundException e) {
+            fail("Should not have ran into Exception");
+        }
     }
 
 }
