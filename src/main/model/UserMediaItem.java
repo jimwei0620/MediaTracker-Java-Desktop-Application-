@@ -1,12 +1,7 @@
 package model;
 
-import exceptions.EmptyStringException;
-import exceptions.InvalidRatingException;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.util.Map;
-import java.util.Objects;
 
 
 // Represents a media(Movies, tv show...) created by user
@@ -43,6 +38,7 @@ public class UserMediaItem extends MediaItem {
             JSONObject dataObject = data.save();
             tagMetaData.put(dataObject);
         }
+
         mediaObject.put("metaDataList", listMetaData);
         mediaObject.put("metaDataTag", tagMetaData);
         return mediaObject;

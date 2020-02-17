@@ -1,13 +1,12 @@
 package persistence;
 
 
-import model.MediaItem;
 import model.MediaList;
+import model.ReadUserItem;
 import model.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 

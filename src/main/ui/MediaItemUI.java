@@ -1,7 +1,5 @@
 package ui;
 
-import exceptions.EmptyStringException;
-import exceptions.InvalidRatingException;
 import exceptions.ItemNotFoundException;
 import model.MediaItem;
 
@@ -192,6 +190,9 @@ public class MediaItemUI {
     private Boolean changeMediaItemRating(String argument) {
         try {
             Float checkNum = Float.parseFloat(argument);
+            if (checkNum < 0 || checkNum > 10) {
+                throw new NumberFormatException();
+            }
             mediaItem.setItemInfo("UserRating", argument);
             return true;
         } catch (NumberFormatException e) {

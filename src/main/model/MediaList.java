@@ -1,12 +1,8 @@
 package model;
 
 import exceptions.EmptyStringException;
-import exceptions.NullDataException;
-import org.json.JSONArray;
 import org.json.JSONObject;
-import persistence.SaveAble;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
 

@@ -1,11 +1,9 @@
 package model;
 
 import exceptions.EmptyStringException;
-import exceptions.NullDataException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;

@@ -1,14 +1,11 @@
-package persistence;
+package model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import persistence.ReadUserItem;
-
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class testReadUserItem {
+public class TestReadUserItem {
     public ReadUserItem readUserItem;
 
     @BeforeEach

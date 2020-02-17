@@ -2,17 +2,12 @@ package persistence;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import model.MediaItem;
-import model.MediaList;
-import model.Tag;
-import model.UserMediaItem;
-import org.json.JSONObject;
+import model.*;
 
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Map;
 
 
 // A reader that can read list data from file. Modeled after Teller App

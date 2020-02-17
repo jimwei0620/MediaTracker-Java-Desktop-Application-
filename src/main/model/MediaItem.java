@@ -1,9 +1,7 @@
 package model;
 
-import com.google.gson.JsonArray;
 import exceptions.DataExistAlreadyException;
 import exceptions.ItemNotFoundException;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.*;

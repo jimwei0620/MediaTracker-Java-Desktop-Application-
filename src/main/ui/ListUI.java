@@ -3,12 +3,10 @@ package ui;
 import exceptions.DataExistAlreadyException;
 import exceptions.EmptyStringException;
 import exceptions.ItemNotFoundException;
-import exceptions.NullDataException;
 import model.*;
 
 import javax.management.openmbean.KeyAlreadyExistsException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Scanner;
 

@@ -1,10 +1,8 @@
 package ui;
 
 
-import exceptions.DataExistAlreadyException;
 import exceptions.EmptyStringException;
 import exceptions.ItemNotFoundException;
-import exceptions.NullDataException;
 import model.*;
 
 import java.io.*;
@@ -13,7 +11,7 @@ import java.util.Iterator;
 import java.util.Scanner;
 
 
-import persistence.ReadUserItem;
+import model.ReadUserItem;
 import persistence.Reader;
 import persistence.Writer;
 
