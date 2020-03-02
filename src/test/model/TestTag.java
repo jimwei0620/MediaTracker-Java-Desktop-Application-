@@ -47,7 +47,7 @@ public class TestTag {
     }
     @Test
     public void testIsEquals() {
-        Tag newTag = new Tag(tag.tagName);
+        Tag newTag = new Tag(tag.getTagName());
         assertEquals(tag, newTag);
     }
 

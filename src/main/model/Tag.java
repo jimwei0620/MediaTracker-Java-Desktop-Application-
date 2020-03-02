@@ -6,7 +6,7 @@ import java.util.Objects;
 
 // Represents a simple string to categorize MediaItems
 public class Tag {
-    String tagName;
+    private String tagName;
 
     public Tag(String tagName) {
         this.tagName = tagName;

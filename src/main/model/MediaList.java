@@ -61,4 +61,9 @@ public class MediaList {
         mediaListObject.put("date", this.date);
         return mediaListObject;
     }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }
