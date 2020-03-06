@@ -10,22 +10,22 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestMetaData {
-    public MetaData metaData;
+    private MetaData metaData;
 
     @BeforeEach
-    public void runBefore() {
+    void runBefore() {
         metaData = new MetaData("List");
     }
 
     @Test
-    public void testConstruct() {
+    void testConstruct() {
         Calendar calendar = Calendar.getInstance();
         assertEquals(calendar.getTime().toString(), metaData.getDate());
         assertEquals("List", metaData.getNameOfObject());
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         MetaData data2 = new MetaData("List");
         assertEquals(data2, metaData);
         MetaData data3 = new MetaData("list");
@@ -33,36 +33,42 @@ public class TestMetaData {
     }
 
     @Test
-    public void testIsEqualsNull() {
+    void testIsEqualsNull() {
         assertNotEquals(metaData, null);
     }
 
     @Test
-    public void testIsEquals() {
+    void testIsEquals() {
         MetaData newMetaData = new MetaData(metaData.getNameOfObject());
         assertEquals(metaData, newMetaData);
     }
 
     @Test
-    public void testIsEqualsSameObject() {
+    void testIsEqualsSameObject() {
         assertEquals(metaData, metaData);
     }
 
     @Test
-    public void testIsEqualsDiffClass() {
+    void testIsEqualsDiffClass() {
         Tag tag = new Tag("test");
         assertNotEquals(metaData, tag);
     }
 
 
     @Test
-    public void testHashCode() {
+    void testHashCode() {
         Map<MetaData, String> testHashMap = new HashMap<>();
         testHashMap.put(metaData, "test");
         MetaData data2 = new MetaData("List");
         assertEquals("test", testHashMap.get(data2));
         MetaData data3 = new MetaData("list");
         assertNotEquals("test", testHashMap.get(data3));
+    }
+
+    @Test
+    void testSetNameOfObject() {
+        metaData.setNameOfObject("newObject");
+        assertEquals("newObject", metaData.getNameOfObject());
     }
 
 }

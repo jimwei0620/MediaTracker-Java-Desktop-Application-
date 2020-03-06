@@ -22,3 +22,5 @@ As a user, I want to...
 
 - be able to save all my lists to file when program exits
 - load my lists when the program starts
+
+- have an interactive graphical user interface that displays user's data

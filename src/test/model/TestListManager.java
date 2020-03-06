@@ -16,19 +16,19 @@ public class TestListManager {
     private ListManager listManager;
 
     @BeforeEach
-    public void runBefore() {
+    void runBefore() {
         listManager = new ListManager();
     }
 
     @Test
-    public void testConstruct() {
+    void testConstruct() {
         assertEquals(0, listManager.numOfLists());
         assertEquals(0, listManager.numOfTags());
         assertEquals(0, listManager.totalNumOfUserItems());
     }
 
     @Test
-    public void testAddTag() {
+    void testAddTag() {
         Tag tag = new Tag("action");
         listManager.addNewTag(tag);
         assertEquals(1, listManager.numOfTags());
@@ -40,7 +40,7 @@ public class TestListManager {
     }
 
     @Test
-    public void testAddTagExistException() {
+    void testAddTagExistException() {
         Tag tag = new Tag("action");
         try {
             listManager.addNewTag(tag);
@@ -51,7 +51,7 @@ public class TestListManager {
     }
 
     @Test
-    public void testDeleteTag() {
+    void testDeleteTag() {
         Tag tag = new Tag("action");
         Tag tag2 = new Tag("adventure");
         MediaItem mediaItem = new UserMediaItem("test");
@@ -69,7 +69,7 @@ public class TestListManager {
     }
 
     @Test
-    public void testTagInList() {
+    void testTagInList() {
         Tag tag = new Tag("action");
         listManager.addNewTag(tag);
         try {
@@ -80,7 +80,7 @@ public class TestListManager {
     }
 
     @Test
-    public void testTagNotInList() {
+    void testTagNotInList() {
         Tag tag = new Tag("action");
         try {
             listManager.tagInList(tag);
@@ -90,7 +90,7 @@ public class TestListManager {
     }
 
     @Test
-    public void testTagItem() {
+    void testTagItem() {
         Tag tag = new Tag("action");
         listManager.addNewTag(tag);
         MediaItem testMediaItem = new UserMediaItem("Avengers");
@@ -104,7 +104,7 @@ public class TestListManager {
     }
 
     @Test
-    public void testTagItemAlreadyExist() {
+    void testTagItemAlreadyExist() {
         Tag tag = new Tag("action");
         listManager.addNewTag(tag);
         MediaItem testMediaItem = new UserMediaItem("Avengers");
@@ -119,7 +119,7 @@ public class TestListManager {
     }
 
     @Test
-    public void testRemoveTag() {
+    void testRemoveTag() {
         Tag tag = new Tag("action");
         listManager.addNewTag(tag);
         MediaItem testMediaItem = new UserMediaItem("Avengers");
@@ -135,7 +135,7 @@ public class TestListManager {
     }
 
     @Test
-    public void testRemoveItemWithNoTag() {
+    void testRemoveItemWithNoTag() {
         Tag tag = new Tag("action");
         listManager.addNewTag(tag);
         MediaItem testMediaItem = new UserMediaItem("Avengers");
@@ -147,7 +147,7 @@ public class TestListManager {
     }
 
     @Test
-    public void testRemoveInactiveItemFalse() {
+    void testRemoveInactiveItemFalse() {
         UserMediaItem mediaItem = new UserMediaItem("Avengers");
         try {
             MediaList mediaList = new MediaList("list");
@@ -161,7 +161,7 @@ public class TestListManager {
     }
 
     @Test
-    public void testRemoveInactiveTrue() {
+    void testRemoveInactiveTrue() {
         UserMediaItem mediaItem = new UserMediaItem("Avengers");
         try {
             MediaList mediaList = new MediaList("list");
@@ -177,7 +177,7 @@ public class TestListManager {
     }
 
     @Test
-    public void testListNotAlreadyExists() {
+    void testListNotAlreadyExists() {
         try {
             MediaList mediaList = new MediaList("new list");
             listManager.addNewList(mediaList);
@@ -188,7 +188,7 @@ public class TestListManager {
     }
 
     @Test
-    public void testListAlreadyExists() {
+    void testListAlreadyExists() {
         try {
             MediaList mediaList = new MediaList("new list");
             listManager.listAlreadyExists(mediaList);
@@ -198,7 +198,7 @@ public class TestListManager {
     }
 
     @Test
-    public void testAddNewListException() {
+    void testAddNewListException() {
         try {
             MediaList mediaList = new MediaList("new list");
             listManager.addNewList(mediaList);
@@ -211,7 +211,7 @@ public class TestListManager {
     }
 
     @Test
-    public void testGetMediaListByNameException() {
+    void testGetMediaListByNameException() {
         try {
             MediaList mediaList = new MediaList("1");
             MediaList mediaList2 = new MediaList("2");
@@ -226,7 +226,7 @@ public class TestListManager {
     }
 
     @Test
-    public void testGetMediaListByName() {
+    void testGetMediaListByName() {
         try {
             MediaList mediaList = new MediaList("new");
             MediaList mediaList2 = new MediaList("2");
@@ -239,7 +239,7 @@ public class TestListManager {
     }
 
     @Test
-    public void testGetListOfMedia() {
+    void testGetListOfMedia() {
         try {
             MediaList mediaList = new MediaList("new");
             UserMediaItem mediaItem = new UserMediaItem("Avengers");
@@ -252,7 +252,7 @@ public class TestListManager {
     }
 
     @Test
-    public void testGetMediaItemInList() {
+    void testGetMediaItemInList() {
         try {
             MediaList mediaList = new MediaList("new");
             UserMediaItem mediaItem = new UserMediaItem("Avengers");
@@ -271,7 +271,7 @@ public class TestListManager {
     }
 
     @Test
-    public void testGetMediaItemInListNotFound() {
+    void testGetMediaItemInListNotFound() {
         try {
             MediaList mediaList = new MediaList("new");
             UserMediaItem mediaItem = new UserMediaItem("Avengers");
@@ -289,18 +289,18 @@ public class TestListManager {
     }
 
     @Test
-    public void testGetTagSet() {
+    void testGetTagSet() {
         Map<Tag, ArrayList<MediaItem>> tagSet = listManager.getTagSet();
         assertEquals(0, tagSet.keySet().size());
     }
 
     @Test
-    public void testGetAllActiveList() {
+    void testGetAllActiveList() {
         assertEquals(0, listManager.allActiveLists().size());
     }
 
     @Test
-    public void testDeleteMediaFromList() {
+    void testDeleteMediaFromList() {
         try {
             MediaList mediaList = new MediaList("test");
             UserMediaItem mediaItem = new UserMediaItem("Avengers");
@@ -314,7 +314,7 @@ public class TestListManager {
     }
 
     @Test
-    public void testAddMediaToListAlreadyExist() {
+    void testAddMediaToListAlreadyExist() {
         try {
             MediaList mediaList = new MediaList("test");
             UserMediaItem mediaItem = new UserMediaItem("yes");
@@ -330,7 +330,7 @@ public class TestListManager {
     }
 
     @Test
-    public void testAddMediaToListInAll() {
+    void testAddMediaToListInAll() {
         try {
             MediaList mediaList = new MediaList("test");
             UserMediaItem mediaItem = new UserMediaItem("testItem");
@@ -343,16 +343,47 @@ public class TestListManager {
     }
 
     @Test
-    public void testGetAllUserMediaItems() {
+    void testGetAllUserMediaItems() {
         assertEquals(0, listManager.getAllUserMediaItems().size());
     }
 
     @Test
-    public void testGetAllTags() {
+    void testGetAllTags() {
         Tag tag = new Tag("action");
         Tag tag2 = new Tag("adventure");
         listManager.addNewTag(tag);
         listManager.addNewTag(tag2);
         assertEquals(2, listManager.getAllActiveTags().size());
+    }
+
+    @Test
+    void testAddEmptyMediaItemListToList() {
+        try {
+            MediaList mediaList = new MediaList("test");
+            listManager.addNewList(mediaList);
+            listManager.addListOfItemToList(mediaList, new ArrayList<>());
+            assertEquals(0, listManager.getListOfMedia(mediaList).size());
+        } catch (EmptyStringException | DataExistAlreadyException | ItemNotFoundException e) {
+            fail("Should not have ran into this exception");
+        }
+    }
+
+    @Test
+    void testAddListOfMediaToList() {
+        try {
+            MediaList mediaList = new MediaList("test");
+            listManager.addNewList(mediaList);
+            ArrayList<MediaItem> listOfItems = new ArrayList<>();
+            MediaItem mediaItem1 = new UserMediaItem("1");
+            MediaItem mediaItem2 = new UserMediaItem("2");
+            MediaItem mediaItem3 = new UserMediaItem("3");
+            listOfItems.add(mediaItem1);
+            listOfItems.add(mediaItem2);
+            listOfItems.add(mediaItem3);
+            listManager.addListOfItemToList(mediaList, listOfItems);
+            assertEquals(3, listManager.getListOfMedia(mediaList).size());
+        } catch (EmptyStringException | DataExistAlreadyException | ItemNotFoundException e) {
+            fail("Should not have ran into this exception");
+        }
     }
 }

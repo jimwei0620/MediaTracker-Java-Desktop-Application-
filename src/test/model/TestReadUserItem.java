@@ -6,15 +6,15 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestReadUserItem {
-    public ReadUserItem readUserItem;
+    private ReadUserItem readUserItem;
 
     @BeforeEach
-    public void runBefore() {
+    void runBefore() {
         readUserItem = new ReadUserItem();
     }
 
     @Test
-    public void testGetters() {
+    void testGetters() {
         assertEquals(0, readUserItem.getMetaDataList().size());
         assertEquals(0, readUserItem.getMetaDataTag().size());
         assertEquals("testTitle", readUserItem.getTitle());

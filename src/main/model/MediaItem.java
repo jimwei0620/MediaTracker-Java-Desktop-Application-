@@ -116,7 +116,7 @@ public abstract class MediaItem {
 
     // EFFECTS: return true if item contains metaData with type and nameOfObject
     public Boolean containMetaDataOf(String type, String nameOfObject) throws ItemNotFoundException {
-        ArrayList<MetaData> metaDataList = new ArrayList<>();
+        ArrayList<MetaData> metaDataList;
         if (type.equals("List")) {
             metaDataList = listData;
         } else if (type.equals("Tag")) {
@@ -152,4 +152,9 @@ public abstract class MediaItem {
     // EFFECTS: save the information of the object into json
     public abstract JSONObject save();
 
+    // EFFECTS: make it so that toString on the object returns its title
+    @Override
+    public String toString() {
+        return itemDetails.get("Title");
+    }
 }

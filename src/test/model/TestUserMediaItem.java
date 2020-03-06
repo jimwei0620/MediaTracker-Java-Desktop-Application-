@@ -13,15 +13,15 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestUserMediaItem {
-    public UserMediaItem mediaItem;
+    private UserMediaItem mediaItem;
 
     @BeforeEach
-    public void runBefore() {
+    void runBefore() {
         mediaItem = new UserMediaItem("Avengers");
     }
 
     @Test
-    public void testConstruct() {
+    void testConstruct() {
         Map<String, String> itemDetails = mediaItem.itemDetails;
         assertTrue(itemDetails.containsKey("Title"));
         assertTrue(itemDetails.containsKey("Type"));
@@ -38,12 +38,12 @@ public class TestUserMediaItem {
     }
 
     @Test
-    public void testNotActive() {
+    void testNotActive() {
         assertFalse(mediaItem.isActive());
     }
 
     @Test
-    public void testActive() {
+    void testActive() {
         try {
             mediaItem.updateData("List", "To watch list");
             assertTrue(mediaItem.isActive());
@@ -53,7 +53,7 @@ public class TestUserMediaItem {
     }
 
     @Test
-    public void testUpdateDataException() {
+    void testUpdateDataException() {
         try {
             mediaItem.updateData("notexist", "To watch");
         } catch (DataExistAlreadyException e) {
@@ -62,7 +62,7 @@ public class TestUserMediaItem {
     }
 
     @Test
-    public void testUpdateDataExistsException() {
+    void testUpdateDataExistsException() {
         try {
             mediaItem.updateData("List", "To watch");
             mediaItem.updateData("List", "To watch");
@@ -72,7 +72,7 @@ public class TestUserMediaItem {
     }
 
     @Test
-    public void testGetItemInfo() {
+    void testGetItemInfo() {
         try {
             assertEquals("Avengers" ,mediaItem.getItemInfo("Title"));
         } catch (ItemNotFoundException e) {
@@ -81,7 +81,7 @@ public class TestUserMediaItem {
     }
 
     @Test
-    public void testRemoveData() {
+    void testRemoveData() {
         try {
             mediaItem.updateData("List", "To watch list");
             mediaItem.removeData("List", "To watch list");
@@ -92,7 +92,7 @@ public class TestUserMediaItem {
     }
 
     @Test
-    public void testRemoveDataException() {
+    void testRemoveDataException() {
         try {
             mediaItem.removeData("dontexist", "To watch list");
         } catch (ItemNotFoundException e) {
@@ -101,7 +101,7 @@ public class TestUserMediaItem {
     }
 
     @Test
-    public void testSetInfo() {
+    void testSetInfo() {
         try {
             mediaItem.setItemInfo("Title", "Avengers");
             assertEquals("Avengers", mediaItem.getItemInfo("Title"));
@@ -112,7 +112,7 @@ public class TestUserMediaItem {
     }
 
     @Test
-    public void testSetInfoException() {
+    void testSetInfoException() {
         try {
             mediaItem.setItemInfo("doesntexist", "nope");
         } catch (ItemNotFoundException e) {
@@ -121,7 +121,7 @@ public class TestUserMediaItem {
     }
 
     @Test
-    public void testIsEquals() {
+    void testIsEquals() {
         MediaItem mediaItem2 = new UserMediaItem("Avengers");
         assertEquals(mediaItem, mediaItem2);
         try {
@@ -135,18 +135,18 @@ public class TestUserMediaItem {
     }
 
     @Test
-    public void testIsEqualsDiffClass() {
+    void testIsEqualsDiffClass() {
         Tag tag = new Tag("test");
         assertNotEquals(mediaItem, tag);
     }
 
     @Test
-    public void testIsEqualsNull() {
+    void testIsEqualsNull() {
         assertNotEquals(mediaItem, null);
     }
 
     @Test
-    public void testHash() {
+    void testHash() {
         Map<MediaItem, String> testHash = new HashMap<>();
         MediaItem mediaItem2 = new UserMediaItem("Avengers");
         testHash.put(mediaItem, "test");
@@ -154,7 +154,7 @@ public class TestUserMediaItem {
     }
 
     @Test
-    public void testGetMetaDataOfList() {
+    void testGetMetaDataOfList() {
         try {
             assertEquals(0, mediaItem.getMetaDataOfType("List").size());
         } catch (ItemNotFoundException e) {
@@ -163,7 +163,7 @@ public class TestUserMediaItem {
     }
 
     @Test
-    public void testGetMetaDataOfTag() {
+    void testGetMetaDataOfTag() {
         try {
             mediaItem.updateData("Tag", "action");
             assertEquals(1, mediaItem.getMetaDataOfType("Tag").size());
@@ -173,7 +173,7 @@ public class TestUserMediaItem {
     }
 
     @Test
-    public void testRemoveMetaDataOfTypeException() {
+    void testRemoveMetaDataOfTypeException() {
         try {
             mediaItem.removeData("List", "none");
         } catch (ItemNotFoundException e) {
@@ -183,7 +183,7 @@ public class TestUserMediaItem {
 
 
     @Test
-    public void testGetMetaDataOfTypeException() {
+    void testGetMetaDataOfTypeException() {
         try {
             mediaItem.getMetaDataOfType("none").size();
         } catch (ItemNotFoundException e) {
@@ -192,7 +192,7 @@ public class TestUserMediaItem {
     }
 
     @Test
-    public void testGetItemInfoException() {
+    void testGetItemInfoException() {
         try {
             mediaItem.getItemInfo("none");
         } catch (ItemNotFoundException e) {
@@ -201,7 +201,7 @@ public class TestUserMediaItem {
     }
 
     @Test
-    public void testContainsMetaDataOfList() {
+    void testContainsMetaDataOfList() {
         try {
             mediaItem.updateData("List", "yes");
             mediaItem.updateData("List", "no");
@@ -213,7 +213,7 @@ public class TestUserMediaItem {
     }
 
     @Test
-    public void testContainsMetaDataOfTag() {
+    void testContainsMetaDataOfTag() {
         try {
             mediaItem.updateData("Tag", "action");
             mediaItem.updateData("Tag", "adventure");
@@ -224,7 +224,7 @@ public class TestUserMediaItem {
     }
 
     @Test
-    public void testContainsMetaDataOfException() {
+    void testContainsMetaDataOfException() {
         try {
             mediaItem.containMetaDataOf("none", "nope");
         } catch (ItemNotFoundException e) {
@@ -233,12 +233,17 @@ public class TestUserMediaItem {
     }
 
     @Test
-    public void testNotContainMetaDataOf() {
+    void testNotContainMetaDataOf() {
         try {
             assertFalse(mediaItem.containMetaDataOf("List", "action"));
         } catch (ItemNotFoundException e) {
             fail("Should not have ran into Exception");
         }
+    }
+
+    @Test
+    void testToString() {
+        assertEquals("Avengers", mediaItem.toString());
     }
 
 }

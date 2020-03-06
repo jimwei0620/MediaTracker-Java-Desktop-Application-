@@ -25,6 +25,10 @@ public class MetaData {
         return this.nameOfObject;
     }
 
+    public void setNameOfObject(String nameOfObject) {
+        this.nameOfObject = nameOfObject;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

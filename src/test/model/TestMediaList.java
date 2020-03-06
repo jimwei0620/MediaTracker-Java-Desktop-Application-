@@ -14,7 +14,7 @@ public class TestMediaList {
     private MediaList list1;
 
     @BeforeEach
-    public void runBefore() {
+    void runBefore() {
         try {
             list1 = new MediaList("List1");
         } catch (EmptyStringException e){
@@ -23,7 +23,7 @@ public class TestMediaList {
     }
 
     @Test
-    public void testMediaListInitEmpty() {
+    void testMediaListInitEmpty() {
         try {
             MediaList newList = new MediaList("");
         } catch (EmptyStringException e) {
@@ -32,14 +32,14 @@ public class TestMediaList {
     }
 
     @Test
-    public void testConstruct() {
+    void testConstruct() {
         Calendar calendar = Calendar.getInstance();
         assertEquals("List1", list1.getName());
         assertEquals(calendar.getTime().toString(), list1.getDate());
     }
 
     @Test
-    public void testSetName() {
+    void testSetName() {
         try {
             list1.setName("New Name");
             assertEquals("New Name", list1.getName());
@@ -49,7 +49,7 @@ public class TestMediaList {
     }
 
     @Test
-    public void testSetNameException() {
+    void testSetNameException() {
         try {
             list1.setName("");
         } catch (EmptyStringException e) {
@@ -58,7 +58,7 @@ public class TestMediaList {
     }
 
     @Test
-    public void testIsEqauls() {
+    void testIsEquals() {
         try {
             MediaList mediaList2 = new MediaList("List1");
             MediaList mediaList3 = new MediaList("list1");
@@ -70,18 +70,18 @@ public class TestMediaList {
     }
 
     @Test
-    public void testIsEqualsNull() {
+    void testIsEqualsNull() {
         assertNotEquals(list1, null);
     }
 
     @Test
-    public void testIsEqualsDiffClass() {
+    void testIsEqualsDiffClass() {
         MediaItem mediaItem = new UserMediaItem("test");
         assertNotEquals(list1, mediaItem);
     }
 
     @Test
-    public void testHashCode() {
+    void testHashCode() {
         Map<MediaList, String> hashCode = new HashMap<>();
         try {
             MediaList mediaList2 = new MediaList("List1");
@@ -92,5 +92,16 @@ public class TestMediaList {
         } catch (EmptyStringException e) {
             fail("Should not have ran into Exception");
         }
+    }
+
+    @Test
+    void testToString() {
+        assertEquals("List1", list1.toString());
+    }
+
+    @Test
+    void testSetDate() {
+        list1.setDate("new date");
+        assertEquals("new date", list1.getDate());
     }
 }

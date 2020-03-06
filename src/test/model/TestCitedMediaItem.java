@@ -11,12 +11,12 @@ public class TestCitedMediaItem {
     private CitedMediaItem citedMediaItem;
 
     @BeforeEach
-    public void runBefore() {
+    void runBefore() {
         citedMediaItem = new CitedMediaItem();
     }
 
     @Test
-    public void testConstruct() {
+    void testConstruct() {
         Map<String, String> itemDetails = citedMediaItem.itemDetails;
         assertTrue(itemDetails.containsKey("Title"));
         assertTrue(itemDetails.containsKey("Year"));
@@ -37,7 +37,7 @@ public class TestCitedMediaItem {
     }
 
     @Test //will develop after implementing getting info from online sources
-    public void testSave() {
+    void testSave() {
         assertNull(citedMediaItem.save());
     }
 }

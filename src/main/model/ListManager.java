@@ -20,7 +20,7 @@ import java.util.Set;
 public class ListManager implements SaveAble {
     private Map<MediaList, ArrayList<MediaItem>> listAndItems;
     private Map<Tag, ArrayList<MediaItem>> tagAndItem;
-    private ArrayList<UserMediaItem> allUserMediaItems; //represent all ACTIVE items
+    private ArrayList<MediaItem> allUserMediaItems; //represent all ACTIVE items
 
 
      // MODIFIES: this
@@ -133,7 +133,7 @@ public class ListManager implements SaveAble {
 
     // MODIFIES: this
     // EFFECTS: add mediaItem to the list specified
-    public void addMediaItemToList(MediaList mediaList, UserMediaItem mediaItem)
+    public void addMediaItemToList(MediaList mediaList, MediaItem mediaItem)
             throws ItemNotFoundException, DataExistAlreadyException, KeyAlreadyExistsException {
         listAlreadyExists(mediaList);
         ArrayList<MediaItem> list = listAndItems.get(mediaList);
@@ -148,6 +148,15 @@ public class ListManager implements SaveAble {
             return;
         }
         throw new KeyAlreadyExistsException();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: add list of mediaItem to list
+    public void addListOfItemToList(MediaList mediaList, ArrayList<MediaItem> mediaItems)
+            throws DataExistAlreadyException, ItemNotFoundException {
+        for (MediaItem item: mediaItems) {
+            addMediaItemToList(mediaList, item);
+        }
     }
 
     // MODIFIES: this
@@ -245,7 +254,7 @@ public class ListManager implements SaveAble {
     }
 
     // EFFECTS: return list of User defined item
-    public ArrayList<UserMediaItem>  getAllUserMediaItems() {
+    public ArrayList<MediaItem>  getAllUserMediaItems() {
         return this.allUserMediaItems;
     }
 

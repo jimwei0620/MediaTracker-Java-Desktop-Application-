@@ -1,16 +1,19 @@
 package ui;
 
-import javax.swing.*;
+import javafx.application.Application;
+import javafx.stage.Stage;
+
 import java.io.IOException;
 
 // Main
-public class Main {
+public class Main extends Application {
     //Effects: begins the tracker app
-    public static void main(String[] args) throws IOException {
-        //new TrackerApp();
-        TrackerAppGUI trackerApp = new TrackerAppGUI();
-        trackerApp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        trackerApp.setSize(400, 400);
-        trackerApp.setVisible(true);
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage stage) {
+        new MainListScene();
     }
 }

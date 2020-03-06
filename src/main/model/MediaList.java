@@ -36,6 +36,10 @@ public class MediaList {
         return date;
     }
 
+    public void setDate(String date) {
+        this.date = date;
+    }
+
 
     @Override
     public boolean equals(Object o) {
