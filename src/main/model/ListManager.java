@@ -166,6 +166,7 @@ public class ListManager implements SaveAble {
         ArrayList<MediaItem> list = listAndItems.get(mediaList);
         list.remove(mediaItem);
         mediaItem.removeData("List", mediaList.getName());
+        removeInactiveItem(mediaItem);
     }
 
     // MODIFIES: this

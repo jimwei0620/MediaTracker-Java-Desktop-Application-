@@ -1,4 +1,4 @@
-package ui;
+package ui.scenes;
 
 
 import exceptions.DataExistAlreadyException;
@@ -18,6 +18,8 @@ import model.ListManager;
 import model.MediaItem;
 import model.MediaList;
 import model.MetaData;
+import ui.consistency.ErrorTextHandler;
+import ui.consistency.InfoUpdaterUI;
 
 import java.util.ArrayList;
 

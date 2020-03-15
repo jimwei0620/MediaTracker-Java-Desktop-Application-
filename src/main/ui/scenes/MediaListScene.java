@@ -1,4 +1,4 @@
-package ui;
+package ui.scenes;
 
 import exceptions.ItemNotFoundException;
 import javafx.collections.FXCollections;
@@ -14,6 +14,8 @@ import javafx.stage.Stage;
 import model.ListManager;
 import model.MediaItem;
 import model.MediaList;
+import ui.consistency.ErrorTextHandler;
+import ui.consistency.ReaderLoader;
 
 // Class that displays GUI for mediaItems in a list
 public class MediaListScene {

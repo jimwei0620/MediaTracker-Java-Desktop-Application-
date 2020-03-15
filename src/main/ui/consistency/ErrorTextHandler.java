@@ -1,4 +1,4 @@
-package ui;
+package ui.consistency;
 
 import javafx.scene.text.Text;
 

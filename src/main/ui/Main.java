@@ -2,8 +2,7 @@ package ui;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-
-import java.io.IOException;
+import ui.scenes.MainListScene;
 
 // Main
 public class Main extends Application {

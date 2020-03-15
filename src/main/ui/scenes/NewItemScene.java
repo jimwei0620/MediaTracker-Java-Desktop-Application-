@@ -1,4 +1,4 @@
-package ui;
+package ui.scenes;
 
 import exceptions.DataExistAlreadyException;
 import exceptions.EmptyStringException;
@@ -15,6 +15,8 @@ import javafx.stage.Stage;
 import model.ListManager;
 import model.MediaList;
 import model.UserMediaItem;
+import ui.consistency.ErrorTextHandler;
+import ui.consistency.InfoUpdaterUI;
 
 import javax.management.openmbean.KeyAlreadyExistsException;
 

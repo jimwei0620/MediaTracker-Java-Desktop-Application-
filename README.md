@@ -24,3 +24,29 @@ As a user, I want to...
 - load my lists when the program starts
 
 - have an interactive graphical user interface that displays user's data
+
+Working on\:
+- making the text fields update each time items are updated
+- size the GUI elements based on window size
+- styling the GUI elements so it looks more appealing
+- Adding some sound interaction
+- Implementing a function to allow users to find/"Cite" Media from online sources like IMDB
+
+## How it works
+There are two "Scenes" in total at the moment. Right now the buttons are pretty self explanatory. 
+
+First Scene
+- Create List - allow users to create a new list 
+- View List - allow users to view the content of a list
+- Edit List - allow users to edit the list (only name for now)
+- Save All - save all changes made to the program
+- Delete List - allow users to delete a list selected
+- List Display Area - click on a list to view its properties(displayed on the right) or select a list to perform an action
+
+Second Scene
+- Create Item - allow users to create a new Item
+- Delete Item - allow users to delete a selected Item
+- Edit Item - allow users to edit the item (Status, Rating, Comments, Name...)
+- Save All - save all changes made to the program
+- Exit List - exit the list (returns to main menu with all lists)
+- List Display Area - click on an item to view its properties

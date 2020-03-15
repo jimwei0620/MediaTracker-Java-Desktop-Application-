@@ -1,20 +1,20 @@
-package ui;
+package ui.scenes;
 
 import exceptions.ItemNotFoundException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.*;
+import ui.consistency.ErrorTextHandler;
+import ui.consistency.ReaderLoader;
 
 import java.io.IOException;
 

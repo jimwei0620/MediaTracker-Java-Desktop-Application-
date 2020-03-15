@@ -1,4 +1,4 @@
-package ui;
+package ui.scenes;
 
 import exceptions.ItemNotFoundException;
 import javafx.geometry.HPos;
@@ -14,6 +14,8 @@ import javafx.stage.Stage;
 import model.ListManager;
 import model.MediaItem;
 import model.MediaList;
+import ui.consistency.ErrorTextHandler;
+import ui.consistency.InfoUpdaterUI;
 
 // implements confirmation for different scenes
 public class ConfirmationScene extends Stage {
@@ -91,7 +93,7 @@ public class ConfirmationScene extends Stage {
         conFirmButton.setOnAction(event -> {
             try {
                 ErrorTextHandler.clearErrorText(errorText);
-                listColl.getListOfMedia(mediaListSelected).remove(mediaItemSelected);
+                listColl.deleteMediaItemFromList(mediaListSelected, mediaItemSelected);
                 InfoUpdaterUI.updateItemListInfo(listsView, listColl, mediaListSelected);
                 this.close();
                 suspendedPane.setDisable(false);
