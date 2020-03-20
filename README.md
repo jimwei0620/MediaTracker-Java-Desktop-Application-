@@ -50,3 +50,5 @@ Second Scene
 - Save All - save all changes made to the program
 - Exit List - exit the list (returns to main menu with all lists)
 - List Display Area - click on an item to view its properties
+
+AudioVisual Component - displaying of lists and info related to the items selected
