@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -18,48 +19,62 @@ import ui.consistency.ErrorTextHandler;
 import ui.consistency.InfoUpdaterUI;
 
 // implements confirmation for different scenes
-public class ConfirmationScene extends Stage {
+public class ConfirmationScene extends Stage implements NewScene {
     private  ListManager listColl;
     private  Pane suspendedPane;
     private Button conFirmButton;
     private Button cancelButton;
     private Text errorText;
+    private FlowPane flowPane;
+    private Text confirmText;
+    private Scene scene;
+    private FlowPane buttonFlowPane;
 
     // MODIFIES: this
     // EFFECTS: set listColl, suspendedPane, and sets up the confirmation scene (buttons)
     public ConfirmationScene(ListManager listColl, Pane suspendedPane) {
         this.listColl = listColl;
         this.suspendedPane = suspendedPane;
-        createConfirmationScene();
+        initializeSceneContent();
+        initializeScene();
+        addSceneContent();
     }
 
     // MODIFIES: this
-    // EFFECTS: creates the window with confirm and cancel buttons
-    private  void createConfirmationScene() {
-        suspendedPane.setDisable(true);
+    // EFFECTS: initializes contents/elements of the scene
+    @Override
+    public void initializeSceneContent() {
         conFirmButton = new Button("Confirm");
         cancelButton = new Button("Cancel");
         errorText = new Text();
+        flowPane = new FlowPane(Orientation.VERTICAL);
+        confirmText = new Text("Are you sure you want to perform this action?");
+        buttonFlowPane = new FlowPane(Orientation.HORIZONTAL);
+    }
 
-        FlowPane flowPane = new FlowPane(Orientation.VERTICAL);
+    // MODIFIES: this
+    // EFFECTS: add elements to the scene
+    @Override
+    public void addSceneContent() {
+        suspendedPane.setDisable(true);
         flowPane.setAlignment(Pos.CENTER);
         flowPane.setColumnHalignment(HPos.CENTER);
         flowPane.setVgap(10);
-
-        Text confirmText = new Text("Are you sure you want to perform this action?");
-
-        FlowPane buttonFlowPane = new FlowPane(Orientation.HORIZONTAL);
         buttonFlowPane.setAlignment(Pos.CENTER);
         buttonFlowPane.setHgap(20);
         buttonFlowPane.setVgap(10);
-
         flowPane.getChildren().add(confirmText);
         flowPane.getChildren().add(buttonFlowPane);
         flowPane.getChildren().add(errorText);
         buttonFlowPane.getChildren().add(conFirmButton);
         buttonFlowPane.getChildren().add(cancelButton);
+    }
 
-        Scene scene = new Scene(flowPane, 400, 100);
+    // MODIFIES: this
+    // EFFECTS: initializes the scene, setting the title and size
+    @Override
+    public void initializeScene() {
+        scene = new Scene(flowPane, 400, 100);
         this.setTitle("Confirmation");
         this.setScene(scene);
         this.show();

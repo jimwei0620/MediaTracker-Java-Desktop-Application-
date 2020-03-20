@@ -5,7 +5,9 @@ import exceptions.DataExistAlreadyException;
 import exceptions.EmptyStringException;
 import exceptions.ItemNotFoundException;
 import javafx.collections.FXCollections;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -24,7 +26,7 @@ import ui.consistency.InfoUpdaterUI;
 import java.util.ArrayList;
 
 // Represent GUI to edit data
-public class EditMediaScene extends Stage {
+public class EditMediaScene extends Stage implements NewScene {
 
     private Scene scene;
     private Pane suspendedPane;
@@ -36,15 +38,35 @@ public class EditMediaScene extends Stage {
     // MODIFIES: this
     //EFFECTS: sets up the main stage for editing medias
     public EditMediaScene(ListManager listColl, Pane suspendedPane) {
-        gridPane = new GridPane();
+        initializeSceneContent();
+        initializeScene();
         gridPane.setVgap(10);
         gridPane.setPadding(new Insets(10, 10, 10, 10));
         this.listColl = listColl;
         this.suspendedPane = suspendedPane;
+        suspendedPane.setDisable(true);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: initializes contents/elements of the scene
+    @Override
+    public void initializeSceneContent() {
+        gridPane = new GridPane();
         conFirmButton = new Button("Confirm");
         cancelButton = new Button("Cancel");
-        suspendedPane.setDisable(true);
+    }
 
+    // MODIFIES: this
+    // EFFECTS: add elements to the scene
+    @Override
+    public void addSceneContent() {
+
+    }
+
+    // MODIFIES: this
+    // EFFECTS: initializes the scene, setting the title and size
+    @Override
+    public void initializeScene() {
         this.setTitle("Edit Information");
         this.setOnCloseRequest(event -> suspendedPane.setDisable(false));
         this.show();

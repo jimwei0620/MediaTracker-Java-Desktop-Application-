@@ -18,7 +18,7 @@ import ui.consistency.ErrorTextHandler;
 import ui.consistency.ReaderLoader;
 
 // Class that displays GUI for mediaItems in a list
-public class MediaListScene {
+public class MediaListScene implements NewScene {
 
     private Scene prevScene;
     private ListManager listColl;
@@ -42,7 +42,15 @@ public class MediaListScene {
         this.prevScene = prevScene;
         this.stage = stage;
         this.mediaListSelected = mediaListSelected;
+        initializeSceneContent();
+        initializeScene();
+        addSceneContent();
+    }
 
+    // MODIFIES: this
+    // EFFECTS: initializes contents/elements of the scene
+    @Override
+    public void initializeSceneContent() {
         createButton = new Button();
         editButton = new Button();
         deleteButton = new Button();
@@ -50,21 +58,25 @@ public class MediaListScene {
         listsView = new ListView<>();
         errorText = new Text();
         exitButton = new Button();
-
         gridPane = new GridPane();
-        scene = new Scene(gridPane, 300, 300);
-        stage.setScene(scene);
-
-        createSceneContent();
     }
 
-    // MODIFIES: This
-    // EFFECTS: creates and display GUI elements
-    private void createSceneContent() {
+    // MODIFIES: this
+    // EFFECTS: add elements to the scene
+    @Override
+    public void addSceneContent() {
         setObjectsListView();
         setListDetailView();
         setButtonsView();
         setButtonListeners();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: initializes the scene, setting the title and size
+    @Override
+    public void initializeScene() {
+        scene = new Scene(gridPane, 400, 300);
+        stage.setScene(scene);
     }
 
     // MODIFIES: this
@@ -111,7 +123,7 @@ public class MediaListScene {
         listDetails.setWrapText(true);
         listDetails.setEditable(false);
         listDetails.setPrefSize(130, 130);
-        gridPane.add(listDetails, 1, 0, 4, 1);
+        gridPane.add(listDetails, 1, 0, 1, 10);
         gridPane.setHgap(10);
         gridPane.setVgap(5);
         gridPane.setPadding(new Insets(5));
@@ -122,20 +134,20 @@ public class MediaListScene {
     private void setButtonsView() {
         createButton.setText("Create Item");
         createButton.setPrefSize(110, 15);
-        gridPane.add(createButton, 3, 5, 1, 1);
+        gridPane.add(createButton, 2, 0, 1, 1);
         deleteButton.setText("Delete Item");
         deleteButton.setPrefSize(110, 15);
-        gridPane.add(deleteButton, 3, 6, 1, 1);
+        gridPane.add(deleteButton, 2, 2, 1, 1);
         editButton.setText("Edit Item");
         editButton.setPrefSize(110, 15);
-        gridPane.add(editButton, 3, 7, 1, 1);
+        gridPane.add(editButton, 2, 3, 1, 1);
         saveButton.setText("Save all");
         saveButton.setPrefSize(110, 15);
-        gridPane.add(saveButton, 3, 8, 1, 1);
+        gridPane.add(saveButton, 2, 4, 1, 1);
         exitButton.setText("Exit List");
         exitButton.setPrefSize(110, 15);
-        gridPane.add(exitButton, 3, 9, 1, 1);
-        gridPane.add(errorText, 3, 10, 1,1);
+        gridPane.add(exitButton, 2, 5, 1, 1);
+        gridPane.add(errorText, 2, 6, 1,1);
     }
 
     // MODIFIES: this
@@ -184,4 +196,6 @@ public class MediaListScene {
         NewItemScene newItemScene = new NewItemScene(listColl, gridPane);
         newItemScene.createNewItem(listsView, mediaListSelected);
     }
+
+
 }

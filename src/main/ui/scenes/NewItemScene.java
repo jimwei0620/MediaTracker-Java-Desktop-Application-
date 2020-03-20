@@ -22,7 +22,7 @@ import javax.management.openmbean.KeyAlreadyExistsException;
 
 
 //Class used to handle new items like lists, media item... etc
-public class NewItemScene extends Stage {
+public class NewItemScene extends Stage implements NewScene {
     private ListManager listColl;
     private Pane paneSuspended;
     private FlowPane flowPane;
@@ -30,18 +30,53 @@ public class NewItemScene extends Stage {
     private Text text;
     private Button addButton;
     private TextField userInput;
+    private Scene scene;
 
     // MODIFIES: This
     // EFFECTS: set this.listColl to listColl
     public NewItemScene(ListManager listColl, Pane paneSuspended) {
         this.listColl = listColl;
         this.paneSuspended = paneSuspended;
+        initializeSceneContent();
+        initializeScene();
+        addSceneContent();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: initializes contents/elements of the scene
+    @Override
+    public void initializeSceneContent() {
         flowPane = new FlowPane(Orientation.VERTICAL);
         errorText = new Text();
         text = new Text("");
         addButton = new Button();
         userInput = new TextField();
-        setSceneForNewList(flowPane, errorText, text, addButton, userInput);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: add elements to the scene
+    @Override
+    public void addSceneContent() {
+        flowPane.setAlignment(Pos.CENTER);
+        flowPane.setVgap(10);
+        flowPane.setColumnHalignment(HPos.CENTER);
+        flowPane.getChildren().add(text);
+        userInput.setPrefSize(150, 50);
+        flowPane.getChildren().add(userInput);
+        addButton.setText("Create");
+        flowPane.getChildren().add(addButton);
+        flowPane.getChildren().add(errorText);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: initializes the scene, setting the title and size
+    @Override
+    public void initializeScene() {
+        scene = new Scene(flowPane, 300, 200);
+        this.setTitle("New List");
+        this.setScene(scene);
+        this.show();
+        this.setOnCloseRequest(event -> paneSuspended.setDisable(false));
     }
 
     // MODIFIES: this
@@ -84,26 +119,6 @@ public class NewItemScene extends Stage {
                 ErrorTextHandler.internalError(errorText);
             }
         });
-    }
-
-    // MODIFIES: this
-    // EFFECTS: sets up the scene for new list
-    private void setSceneForNewList(FlowPane flowPane,
-                                    Text errorText, Text text, Button addButton, TextField userInput) {
-        flowPane.setAlignment(Pos.CENTER);
-        flowPane.setVgap(10);
-        flowPane.setColumnHalignment(HPos.CENTER);
-        flowPane.getChildren().add(text);
-        userInput.setPrefSize(150, 50);
-        flowPane.getChildren().add(userInput);
-        addButton.setText("Create");
-        flowPane.getChildren().add(addButton);
-        flowPane.getChildren().add(errorText);
-        Scene scene = new Scene(flowPane, 300, 200);
-        this.setTitle("New List");
-        this.setScene(scene);
-        this.show();
-        this.setOnCloseRequest(event -> paneSuspended.setDisable(false));
     }
 
 

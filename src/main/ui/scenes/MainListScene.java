@@ -19,7 +19,7 @@ import ui.consistency.ReaderLoader;
 import java.io.IOException;
 
 // Main Graphical Interface
-public class MainListScene extends Stage {
+public class MainListScene extends Stage implements NewScene {
 
     private ListManager listColl;
     private GridPane gridPane;
@@ -36,6 +36,20 @@ public class MainListScene extends Stage {
     // MODIFIES: this
     // EFFECTS: set the scene and all interactions
     public MainListScene() {
+        initializeSceneContent();
+        try {
+            ReaderLoader.loadInfo(listColl);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        initializeScene();
+        addSceneContent();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: initializes contents/elements of the scene
+    @Override
+    public void initializeSceneContent() {
         listColl = new ListManager();
         gridPane = new GridPane();
         createButton = new Button();
@@ -45,27 +59,27 @@ public class MainListScene extends Stage {
         listsView = new ListView<>();
         errorText = new Text();
         editListButton = new Button();
-
-        try {
-            ReaderLoader.loadInfo(listColl);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        scene = new Scene(gridPane, 300, 300);
-        this.setTitle("Simple application");
-        this.setScene(scene);
-        this.show();
-        createSceneContent();
+        listDetails = new TextArea();
     }
 
     // MODIFIES: this
-    // EFFECTS: sets up the panel for the menu of application
-    private void createSceneContent() {
+    // EFFECTS: add elements to the scene
+    @Override
+    public void addSceneContent() {
         setObjectListView();
         setListDetailView();
         setButtonsView();
         setButtonListeners();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: initializes the scene, setting the title and size
+    @Override
+    public void initializeScene() {
+        scene = new Scene(gridPane, 400, 300);
+        this.setTitle("Simple application");
+        this.setScene(scene);
+        this.show();
     }
 
     // MODIFIES: this
@@ -96,11 +110,10 @@ public class MainListScene extends Stage {
     // MODIFIES: this
     // EFFECTS: sets up list details view
     private  void setListDetailView() {
-        listDetails = new TextArea();
         listDetails.setWrapText(true);
         listDetails.setEditable(false);
-        listDetails.setPrefSize(130, 130);
-        gridPane.add(listDetails, 1, 0, 4, 1);
+        listDetails.setPrefSize(150, 150);
+        gridPane.add(listDetails, 1, 0, 1, 10);
         gridPane.setHgap(10);
         gridPane.setVgap(5);
         gridPane.setPadding(new Insets(5));
@@ -112,20 +125,20 @@ public class MainListScene extends Stage {
     private void setButtonsView() {
         createButton.setText("Create List");
         createButton.setPrefSize(110, 15);
-        gridPane.add(createButton, 3, 5, 1, 1);
+        gridPane.add(createButton, 2, 0, 1, 1);
         deleteButton.setText("Delete List");
         deleteButton.setPrefSize(110, 15);
-        gridPane.add(deleteButton, 3, 6, 1, 1);
+        gridPane.add(deleteButton, 2, 1, 1, 1);
         viewButton.setText("View List");
         viewButton.setPrefSize(110, 15);
-        gridPane.add(viewButton, 3, 7, 1, 1);
+        gridPane.add(viewButton, 2, 2, 1, 1);
         saveButton.setText("Save all");
         saveButton.setPrefSize(110, 15);
-        gridPane.add(saveButton, 3, 8, 1, 1);
+        gridPane.add(saveButton, 2, 3, 1, 1);
         editListButton.setText("Edit List");
         editListButton.setPrefSize(110, 15);
-        gridPane.add(editListButton, 3, 9, 1, 1);
-        gridPane.add(errorText, 3, 10, 1,1);
+        gridPane.add(editListButton, 2, 4, 1, 1);
+        gridPane.add(errorText, 2, 5, 1,1);
     }
 
     // MODIFIES: this
@@ -145,8 +158,8 @@ public class MainListScene extends Stage {
         editListButton.setOnAction(event -> {
             try {
                 MediaList mediaList = itemSelectedInView();
-                EditMediaScene editMediaScene = new EditMediaScene(listColl, gridPane);
-                editMediaScene.editListInfo(mediaList, listsView);
+                EditListScene editListScene = new EditListScene(listColl, gridPane);
+                editListScene.editListInfo(mediaList, listsView);
             } catch (NullPointerException e) {
                 ErrorTextHandler.nothingSelectedError(errorText);
             }
@@ -188,7 +201,6 @@ public class MainListScene extends Stage {
         NewItemScene newItemScene = new NewItemScene(listColl, gridPane);
         newItemScene.createNewList(listsView);
     }
-
 
 
 }
