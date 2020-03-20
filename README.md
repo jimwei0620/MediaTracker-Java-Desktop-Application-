@@ -51,4 +51,29 @@ Second Scene
 - Exit List - exit the list (returns to main menu with all lists)
 - List Display Area - click on an item to view its properties
 
-AudioVisual Component - displaying of lists and info related to the items selected
+- AudioVisual Component - displaying of lists and info related to the items selected
+
+##Phase 4: Task 2
+Robust Class(ListManager)<br/>
+Exceptions:<br/>
+- ItemNotFoundException -> checks if item are in the list
+- DataAlreadyExistsException -> checks if an item is already tagged, added.
+
+Methods:<br/>
+- ListManager.tagInList()
+- ListManager.deleteTag()
+- ListManager.tagItem()
+- ListManager.removeTag()
+- ListManager.getListOfMediaWithTag()
+- ListManager.getMediaListByName()
+- ListManager.getListOfMedia() <br/>
+There are a lot more inside ListManager related to adding and getting information from an Object or list. <br/>
+(ListManager will most likely be refactored for task 3)
+
+Tests (TestListManager):<br/>
+- TestListManager.testAddTag()
+- TestListManager.testAddTagException()
+- TestListManager.testTagNotInList()
+- TestListManager.testTagInList()<br/>
+All methods with exceptions are tested further in this test class.
+
