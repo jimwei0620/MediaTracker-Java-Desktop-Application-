@@ -19,11 +19,18 @@ public class TestWriter {
     private static final String TEST_ITEM_FILE = "./data/testWriteItemFile.json";
     private Writer testWriter;
     private ListManager manager;
+    private TagManager tagManager;
+    private ItemManager itemManager;
 
     @BeforeEach
     void runBefore() throws IOException {
         testWriter = new Writer(new File(TEST_LIST_FILE), new File(TEST_TAG_FILE), new File(TEST_ITEM_FILE));
-        manager = new ListManager();
+        ListManager.removeInstance();
+        TagManager.removeInstance();
+        ItemManager.removeInstance();
+        manager = ListManager.getInstance();
+        tagManager = TagManager.getInstance();
+        itemManager = ItemManager.getInstance();
     }
 
     @Test
@@ -54,11 +61,13 @@ public class TestWriter {
             manager.addNewList(testList2);
             manager.addMediaItemToList(testList, testItem);
             manager.addMediaItemToList(testList, testItem2);
-            manager.addNewTag(testTag);
-            manager.addNewTag(testTag2);
-            manager.tagItem(testTag, testItem);
-            manager.tagItem(testTag2, testItem2);
+            tagManager.addNewTag(testTag);
+            tagManager.addNewTag(testTag2);
+            tagManager.tagItem(testTag, testItem);
+            tagManager.tagItem(testTag2, testItem2);
             testWriter.write(manager);
+            testWriter.write(tagManager);
+            testWriter.write(itemManager);
             testWriter.close();
             ArrayList<MediaList> lists = Reader.readListFile(TEST_LIST_FILE);
             assertEquals(2, lists.size());
@@ -74,6 +83,7 @@ public class TestWriter {
             assertEquals(2, items.size());
         } catch (NullPointerException | IOException |
                 EmptyStringException | DataExistAlreadyException | ItemNotFoundException e) {
+            e.printStackTrace();
             fail("Exception should not have been thrown");
         }
     }

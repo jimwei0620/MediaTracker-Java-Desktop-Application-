@@ -11,9 +11,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import model.ListManager;
-import model.MediaItem;
-import model.MediaList;
+import model.*;
 import ui.consistency.ErrorTextHandler;
 import ui.consistency.ReaderLoader;
 
@@ -22,6 +20,8 @@ public class MediaListScene implements NewScene {
 
     private Scene prevScene;
     private ListManager listColl;
+    private TagManager tagColl;
+    private ItemManager itemColl;
     private Stage stage;
     private MediaList mediaListSelected;
     private GridPane gridPane;
@@ -37,8 +37,11 @@ public class MediaListScene implements NewScene {
 
     // MODIFIES: this
     // EFFECTS: sets the stage, listColl, previous scene, and initializes GUI elements
-    public MediaListScene(Stage stage, ListManager listColl, Scene prevScene, MediaList mediaListSelected) {
+    public MediaListScene(Stage stage, ListManager listColl, TagManager tagColl, ItemManager itemColl,
+                          Scene prevScene, MediaList mediaListSelected) {
         this.listColl = listColl;
+        this.tagColl = tagColl;
+        this.itemColl = itemColl;
         this.prevScene = prevScene;
         this.stage = stage;
         this.mediaListSelected = mediaListSelected;
@@ -167,7 +170,7 @@ public class MediaListScene implements NewScene {
                 ErrorTextHandler.nothingSelectedError(errorText);
             }
         });
-        saveButton.setOnAction(event -> ReaderLoader.saveProgram(listColl));
+        saveButton.setOnAction(event -> ReaderLoader.saveProgram(listColl, tagColl, itemColl));
         deleteButton.setOnAction(event -> deleteList());
         exitButton.setOnAction(event -> stage.setScene(prevScene));
     }

@@ -16,10 +16,12 @@ public class ReaderLoader {
     private static final String ITEM_FILE = "./data/userItemFile.json";
 
     // EFFECTS: save state of listColl to LISTS_FILE. Modeled after TellerApp
-    public static void saveProgram(ListManager listColl) {
+    public static void saveProgram(ListManager listColl, TagManager tagManager, ItemManager itemManager) {
         try {
             Writer writer = new Writer(new File(LIST_FILE), new File(TAG_FILE), new File(ITEM_FILE));
             writer.write(listColl);
+            writer.write(tagManager);
+            writer.write(itemManager);
             writer.close();
             System.out.println("All lists are saved to file " + LIST_FILE);
         } catch (IOException e) {
@@ -30,22 +32,22 @@ public class ReaderLoader {
 
     // MODIFIES: this
     // EFFECTS: load info from LIST_FILE. Catch NullPointerException when there are no info in LIST_FILE
-    public static void loadInfo(ListManager listColl) throws IOException {
+    public static void loadInfo(ListManager listColl, TagManager tagColl, ItemManager itemColl) throws IOException {
         ArrayList<ReadUserItem> userItemRead = Reader.readItemFile(ITEM_FILE);
         ArrayList<Tag> tagRead = Reader.readTagFile(TAG_FILE);
         ArrayList<MediaList> listRead = Reader.readListFile(LIST_FILE);
-        processTagData(tagRead, listColl);
+        processTagData(tagRead, tagColl);
         processListData(listRead, listColl);
-        processUserItemData(userItemRead, listColl);
+        processUserItemData(userItemRead, listColl, tagColl, itemColl);
     }
 
 
     // MODIFIES: this
     // EFFECTS Processes Tag data from files
-    private static void processTagData(ArrayList<Tag> tagRead, ListManager listColl) {
+    private static void processTagData(ArrayList<Tag> tagRead, TagManager tagManager) {
         if (tagRead != null) {
             for (Tag tag: tagRead) {
-                listColl.addNewTag(tag);
+                tagManager.addNewTag(tag);
             }
         } else {
             System.out.println("There are no tags!");
@@ -67,12 +69,13 @@ public class ReaderLoader {
 
     // MODIFIES: this
     // EFFECTS Processes User Item data from files
-    private static void processUserItemData(ArrayList<ReadUserItem> userItemRead, ListManager listColl) {
+    private static void processUserItemData(ArrayList<ReadUserItem> userItemRead,
+                                            ListManager listColl, TagManager tagColl, ItemManager itemColl) {
         if (userItemRead != null) {
             ArrayList<UserMediaItem> userMediaItems = processAllItems(userItemRead);
-            listColl.getAllUserMediaItems().addAll(userMediaItems);
+            itemColl.getAllUserMediaItems().addAll(userMediaItems);
             loadToLists(userMediaItems, listColl);
-            loadToTags(userMediaItems, listColl);
+            loadToTags(userMediaItems, tagColl);
 
         } else {
             System.out.println("There are no items!");
@@ -123,13 +126,13 @@ public class ReaderLoader {
 
     // MODIFIES: this
     // EFFECTS load userMediaItems to tags
-    private static void loadToTags(ArrayList<UserMediaItem> userMediaItems, ListManager listColl) {
-        for (Tag tag: listColl.getAllActiveTags()) {
+    private static void loadToTags(ArrayList<UserMediaItem> userMediaItems, TagManager tagManager) {
+        for (Tag tag: tagManager.getAllActiveTags()) {
             for (UserMediaItem item: userMediaItems) {
                 try {
                     if (item.containMetaDataOf("List", tag.getTagName())) {
                         try {
-                            listColl.getListOfMediaWithTag(tag).add(item);
+                            tagManager.getListOfMediaWithTag(tag).add(item);
                         } catch (ItemNotFoundException e) {
                             System.out.println("Internal Error");
                         }

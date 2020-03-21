@@ -2,9 +2,9 @@ package model;
 
 import exceptions.DataExistAlreadyException;
 import exceptions.ItemNotFoundException;
-import javafx.beans.InvalidationListener;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import persistence.SaveAble;
 
 import javax.management.openmbean.KeyAlreadyExistsException;
 import java.io.FileWriter;
@@ -12,13 +12,29 @@ import java.util.*;
 
 
 // class which manages tags and tagged items
-public class TagManager {
+public class TagManager implements SaveAble {
     private Map<Tag, ArrayList<MediaItem>> tagAndItem;
+    private static TagManager instance;
 
     // MODIFIES: this
     // EFFECTS: initialize tagAndItem (empty)
-    public TagManager() {
+    private TagManager() {
         tagAndItem = new HashMap<>();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Get instance of TagManager
+    public static TagManager getInstance() {
+        if (instance == null) {
+            instance = new TagManager();
+        }
+        return instance;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: remove instance of TagManager
+    public static void removeInstance() {
+        instance = null;
     }
 
     // MODIFIES: this
@@ -88,8 +104,9 @@ public class TagManager {
         return tagAndItem.get(tag);
     }
 
-    // EFFECTS: Save all the tags into a JSONObject and return it
-    public void saveTag(FileWriter tagFile) {
+
+    @Override
+    public void save(FileWriter listFile, FileWriter tagFile, FileWriter itemFile) {
         JSONArray arrayOfTags = new JSONArray();
         for (Tag tag: tagAndItem.keySet()) {
             JSONObject tagObject = tag.save();
@@ -97,5 +114,4 @@ public class TagManager {
         }
         arrayOfTags.write(tagFile);
     }
-
 }

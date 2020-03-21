@@ -22,6 +22,8 @@ import java.io.IOException;
 public class MainListScene extends Stage implements NewScene {
 
     private ListManager listColl;
+    private TagManager tagColl;
+    private ItemManager itemColl;
     private GridPane gridPane;
     private Button createButton;
     private Button viewButton;
@@ -38,7 +40,7 @@ public class MainListScene extends Stage implements NewScene {
     public MainListScene() {
         initializeSceneContent();
         try {
-            ReaderLoader.loadInfo(listColl);
+            ReaderLoader.loadInfo(listColl, tagColl, itemColl);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -50,7 +52,9 @@ public class MainListScene extends Stage implements NewScene {
     // EFFECTS: initializes contents/elements of the scene
     @Override
     public void initializeSceneContent() {
-        listColl = new ListManager();
+        listColl = ListManager.getInstance();
+        tagColl = TagManager.getInstance();
+        itemColl = ItemManager.getInstance();
         gridPane = new GridPane();
         createButton = new Button();
         viewButton = new Button();
@@ -148,12 +152,12 @@ public class MainListScene extends Stage implements NewScene {
         viewButton.setOnAction(event -> {
             try {
                 MediaList mediaList = itemSelectedInView();
-                new MediaListScene(this, listColl, scene, mediaList);
+                new MediaListScene(this, listColl, tagColl, itemColl, scene, mediaList);
             } catch (NullPointerException e) {
                 ErrorTextHandler.nothingSelectedError(errorText);
             }
         });
-        saveButton.setOnAction(event -> ReaderLoader.saveProgram(listColl));
+        saveButton.setOnAction(event -> ReaderLoader.saveProgram(listColl, tagColl, itemColl));
         deleteButton.setOnAction(event -> deleteList());
         editListButton.setOnAction(event -> {
             try {

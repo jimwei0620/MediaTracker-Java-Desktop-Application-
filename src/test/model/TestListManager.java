@@ -17,163 +17,13 @@ public class TestListManager {
 
     @BeforeEach
     void runBefore() {
-        listManager = new ListManager();
+        ListManager.removeInstance();
+        listManager = ListManager.getInstance();
     }
 
     @Test
     void testConstruct() {
         assertEquals(0, listManager.numOfLists());
-        assertEquals(0, listManager.numOfTags());
-        assertEquals(0, listManager.totalNumOfUserItems());
-    }
-
-    @Test
-    void testAddTag() {
-        Tag tag = new Tag("action");
-        listManager.addNewTag(tag);
-        assertEquals(1, listManager.numOfTags());
-        try {
-            assertEquals(0, listManager.getListOfMediaWithTag(tag).size());
-        } catch (ItemNotFoundException e) {
-            fail("Should not have ran into Exception");
-        }
-    }
-
-    @Test
-    void testAddTagExistException() {
-        Tag tag = new Tag("action");
-        try {
-            listManager.addNewTag(tag);
-            listManager.addNewTag(tag);
-        } catch (KeyAlreadyExistsException e) {
-            //expected
-        }
-    }
-
-    @Test
-    void testDeleteTag() {
-        Tag tag = new Tag("action");
-        Tag tag2 = new Tag("adventure");
-        MediaItem mediaItem = new UserMediaItem("test");
-        MediaItem mediaItem1 = new UserMediaItem("test2");
-        listManager.addNewTag(tag2);
-        listManager.addNewTag(tag);
-        try {
-            listManager.tagItem(tag, mediaItem);
-            listManager.tagItem(tag, mediaItem1);
-            listManager.deleteTag(tag);
-            assertEquals(1, listManager.numOfTags());
-        } catch (ItemNotFoundException | DataExistAlreadyException e) {
-            fail("Should not have ran into Exception");
-        }
-    }
-
-    @Test
-    void testTagInList() {
-        Tag tag = new Tag("action");
-        listManager.addNewTag(tag);
-        try {
-            listManager.tagInList(tag);
-        } catch (ItemNotFoundException e) {
-            fail("Should not have ran into exception");
-        }
-    }
-
-    @Test
-    void testTagNotInList() {
-        Tag tag = new Tag("action");
-        try {
-            listManager.tagInList(tag);
-        } catch (ItemNotFoundException e) {
-            //expected
-        }
-    }
-
-    @Test
-    void testTagItem() {
-        Tag tag = new Tag("action");
-        listManager.addNewTag(tag);
-        MediaItem testMediaItem = new UserMediaItem("Avengers");
-        try {
-            listManager.tagItem(tag, testMediaItem);
-            assertEquals(1, listManager.getListOfMediaWithTag(tag).size());
-        } catch (DataExistAlreadyException | ItemNotFoundException e) {
-            e.printStackTrace();
-            fail("Should not have ran into any exception");
-        }
-    }
-
-    @Test
-    void testTagItemAlreadyExist() {
-        Tag tag = new Tag("action");
-        listManager.addNewTag(tag);
-        MediaItem testMediaItem = new UserMediaItem("Avengers");
-        try {
-            listManager.tagItem(tag, testMediaItem);
-            listManager.tagItem(tag, testMediaItem);
-        } catch (ItemNotFoundException e) {
-            fail("Should not have ran into this exception");
-        } catch (DataExistAlreadyException e) {
-            //expected
-        }
-    }
-
-    @Test
-    void testRemoveTag() {
-        Tag tag = new Tag("action");
-        listManager.addNewTag(tag);
-        MediaItem testMediaItem = new UserMediaItem("Avengers");
-        try {
-            listManager.tagItem(tag, testMediaItem);
-            listManager.removeTag(tag, testMediaItem);
-            System.out.println("Wprking");
-            assertEquals(0, listManager.getListOfMediaWithTag(tag).size());
-        } catch (DataExistAlreadyException | ItemNotFoundException e) {
-            e.printStackTrace();
-            fail("Should not have ran into any exceptions");
-        }
-    }
-
-    @Test
-    void testRemoveItemWithNoTag() {
-        Tag tag = new Tag("action");
-        listManager.addNewTag(tag);
-        MediaItem testMediaItem = new UserMediaItem("Avengers");
-        try {
-            listManager.removeTag(tag, testMediaItem);
-        } catch (ItemNotFoundException e) {
-            //expected
-        }
-    }
-
-    @Test
-    void testRemoveInactiveItemFalse() {
-        UserMediaItem mediaItem = new UserMediaItem("Avengers");
-        try {
-            MediaList mediaList = new MediaList("list");
-            listManager.addNewList(mediaList);
-            listManager.addMediaItemToList(mediaList, mediaItem);
-            assertFalse(listManager.removeInactiveItem(mediaItem));
-        } catch (EmptyStringException | ItemNotFoundException | DataExistAlreadyException e) {
-            e.printStackTrace();
-            fail("Should not have ran into Exception");
-        }
-    }
-
-    @Test
-    void testRemoveInactiveTrue() {
-        UserMediaItem mediaItem = new UserMediaItem("Avengers");
-        try {
-            MediaList mediaList = new MediaList("list");
-            listManager.addNewList(mediaList);
-            listManager.addMediaItemToList(mediaList, mediaItem);
-            listManager.removeList(mediaList);
-            assertEquals(0, listManager.numOfLists());
-            assertEquals(0, listManager.totalNumOfUserItems());
-        } catch (EmptyStringException | ItemNotFoundException | DataExistAlreadyException e) {
-            e.printStackTrace();
-            fail("Should not have ran into Exception");
-        }
     }
 
     @Test
@@ -289,12 +139,6 @@ public class TestListManager {
     }
 
     @Test
-    void testGetTagSet() {
-        Map<Tag, ArrayList<MediaItem>> tagSet = listManager.getTagSet();
-        assertEquals(0, tagSet.keySet().size());
-    }
-
-    @Test
     void testGetAllActiveList() {
         assertEquals(0, listManager.allActiveLists().size());
     }
@@ -330,33 +174,6 @@ public class TestListManager {
     }
 
     @Test
-    void testAddMediaToListInAll() {
-        try {
-            MediaList mediaList = new MediaList("test");
-            UserMediaItem mediaItem = new UserMediaItem("testItem");
-            listManager.addNewList(mediaList);
-            listManager.getAllUserMediaItems().add(mediaItem);
-            listManager.addMediaItemToList(mediaList, mediaItem);
-        } catch (DataExistAlreadyException | ItemNotFoundException |EmptyStringException e) {
-            fail("Should not have ran into Exception");
-        }
-    }
-
-    @Test
-    void testGetAllUserMediaItems() {
-        assertEquals(0, listManager.getAllUserMediaItems().size());
-    }
-
-    @Test
-    void testGetAllTags() {
-        Tag tag = new Tag("action");
-        Tag tag2 = new Tag("adventure");
-        listManager.addNewTag(tag);
-        listManager.addNewTag(tag2);
-        assertEquals(2, listManager.getAllActiveTags().size());
-    }
-
-    @Test
     void testAddEmptyMediaItemListToList() {
         try {
             MediaList mediaList = new MediaList("test");
@@ -384,6 +201,34 @@ public class TestListManager {
             assertEquals(3, listManager.getListOfMedia(mediaList).size());
         } catch (EmptyStringException | DataExistAlreadyException | ItemNotFoundException e) {
             fail("Should not have ran into this exception");
+        }
+    }
+
+    @Test
+    void testRemoveList() {
+        try {
+            MediaList testList = new MediaList("list1");
+            MediaItem mediaItem = new UserMediaItem("testItem");
+            MediaItem mediaItem1 = new UserMediaItem("item 2");
+            listManager.addNewList(testList);
+            listManager.addMediaItemToList(testList, mediaItem);
+            listManager.addMediaItemToList(testList, mediaItem1);
+            listManager.removeList(testList);
+            assertEquals(0, mediaItem.getMetaDataOfType("List").size());
+            assertEquals(0, listManager.allActiveLists().size());
+        } catch (EmptyStringException | ItemNotFoundException | DataExistAlreadyException e) {
+            fail("should not have ran into exception");
+        }
+    }
+
+    @Test
+    void testRemoveListNotFound() {
+        try {
+            MediaList testList = new MediaList("list1");
+            listManager.removeList(testList);
+            fail("Should have caught exception");
+        } catch (EmptyStringException | ItemNotFoundException e) {
+            //expected
         }
     }
 }
