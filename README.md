@@ -77,3 +77,13 @@ Tests (TestListManager):<br/>
 - TestListManager.testTagInList()<br/>
 All methods with exceptions are tested further in this test class.
 
+##Phase 4: Task 3
+Problem 1: ListManager has too many responsibilities (Tag, items, lists)
+Problem 2: Classes have too much Coupling with ListManager. In other words, an error in ListManager crashes the whole program
+
+Solution: Separate ListManager into three classes
+- ItemManager
+- ListManager
+- TagManager <br/>
+
+This increases cohesion and at the same time also decreases coupling ListManager have with other classes
