@@ -21,9 +21,9 @@ import java.io.IOException;
 // Main Graphical Interface
 public class MainListScene extends Stage implements NewScene {
 
-    private ListManager listColl;
-    private TagManager tagColl;
-    private ItemManager itemColl;
+    protected ListManager listColl;
+    protected TagManager tagColl;
+    protected ItemManager itemColl;
     private GridPane gridPane;
     private Button createButton;
     private Button viewButton;
@@ -171,11 +171,11 @@ public class MainListScene extends Stage implements NewScene {
     }
 
     // EFFECTS: check if any mediaItem are selected, if not catches NullPointerException, else return the item
-    private MediaList itemSelectedInView() throws  NullPointerException {
+    private MediaList itemSelectedInView() throws NullPointerException {
         MediaList mediaList;
         ErrorTextHandler.clearErrorText(errorText);
         mediaList = listsView.getSelectionModel().getSelectedItem();
-        if (mediaList.equals(null)) {
+        if (mediaList == null) {
             throw new NullPointerException();
         }
         return mediaList;
@@ -205,6 +205,7 @@ public class MainListScene extends Stage implements NewScene {
         NewItemScene newItemScene = new NewItemScene(listColl, gridPane);
         newItemScene.createNewList(listsView);
     }
+
 
 
 }

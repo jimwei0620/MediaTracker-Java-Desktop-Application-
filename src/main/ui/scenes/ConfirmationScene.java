@@ -1,10 +1,12 @@
 package ui.scenes;
 
 import exceptions.ItemNotFoundException;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.FlowPane;
@@ -17,6 +19,9 @@ import model.MediaItem;
 import model.MediaList;
 import ui.consistency.ErrorTextHandler;
 import ui.consistency.InfoUpdaterUI;
+
+import java.io.IOException;
+
 
 // implements confirmation for different scenes
 public class ConfirmationScene extends Stage implements NewScene {
