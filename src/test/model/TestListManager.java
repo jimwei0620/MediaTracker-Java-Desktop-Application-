@@ -231,4 +231,9 @@ public class TestListManager {
             //expected
         }
     }
+
+    @Test
+    void testGetInstance() {
+        assertNotNull(ListManager.getInstance());
+    }
 }

@@ -10,8 +10,7 @@ import javax.management.openmbean.KeyAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestTagManager {
     private TagManager tagManager;
@@ -154,5 +153,10 @@ public class TestTagManager {
         tagManager.addNewTag(tag);
         tagManager.addNewTag(tag2);
         assertEquals(2, tagManager.getAllActiveTags().size());
+    }
+
+    @Test
+    void testGetInstance() {
+        assertNotNull(TagManager.getInstance());
     }
 }

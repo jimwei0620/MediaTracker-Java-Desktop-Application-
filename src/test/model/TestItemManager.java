@@ -35,6 +35,15 @@ public class TestItemManager {
     }
 
     @Test
+    void testDoesNotContain() {
+        MediaItem testItem = new UserMediaItem("test");
+        MediaItem notInList = new UserMediaItem("test2");
+        itemManager.addItem(testItem);
+        itemManager.removeItem(notInList);
+        assertEquals(1, itemManager.getAllUserMediaItems().size());
+    }
+
+    @Test
     void testRemoveInActiveItemsTrue() {
         MediaItem testItem = new UserMediaItem("test");//item not related to any lists or tags
         itemManager.addItem(testItem);
